@@ -81,8 +81,8 @@ cd backend
 
 ```bash
 cd frontend
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 ## 🗺️ Roadmap
