@@ -99,7 +99,7 @@ pnpm dev
 | Nombre |
 |---|
 | Cain Cabrera Bertolazzi |
-| Leoel Jesus Allabay |
+| Leonel Jesús Allabay |
 | Alex Nahuel Austin |
 
 ## 📄 Licencia
