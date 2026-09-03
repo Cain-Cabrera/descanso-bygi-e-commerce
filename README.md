@@ -112,7 +112,7 @@ Desarrollado como Proyecto Final Integrador — Tecnicatura en Programación, UT
 **4. Documentación** 
 - README completo con instrucciones de instalación
 - Documentación técnica (arquitectura, APIs, DB)
-- Diagramas (ER diagram, arquitectura del sistema)
+- Diagramas (ER diagram)
 
 **5. Deployment** 
 - Deploy frontend en Vercel/Netlify
