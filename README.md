@@ -85,45 +85,43 @@ Desarrollado como Proyecto Final Integrador — Tecnicatura en Programación, UT
 - ✅ Confirmación de pedido (coordinación de pago por WhatsApp/transferencia)
 - 📦 Seguimiento de pedidos en tiempo real
 - ⚙️ Panel administrativo para gestión de productos, stock y órdenes
-- 📱 Diseño responsivo (mobile, tablet, desktop)
-- 🔒 Autenticación segura (JWT)
+- 📱 Diseño responsivo (mobile, desktop)
 
 ### Alcance del Proyecto
 
 **Trabajo que hay que realizar para entregar el producto:**
 
-**1. Análisis** (Agosto - Septiembre)
+**1. Análisis** 
 - Análisis de requisitos funcionales y no-funcionales
 - Diseño de arquitectura del sistema
 - Diseño de base de datos (modelo relacional, tablas, índices)
 - Especificación de APIs REST (endpoints, métodos, respuestas)
 
-**2. Desarrollo** (Septiembre - Octubre)
+**2. Desarrollo** 
 - Backend: APIs REST en Java Spring Boot (productos, carrito, pedidos, usuarios)
-- Frontend: Interfaz React + TypeScript (catálogo, carrito, checkout, admin)
+- Frontend: Interfaz React + TypeScript (catálogo, carrito, checkout, admin, cliente)
 - Base de datos: Setup MySQL, scripts DDL/DML, migraciones
 - Integración frontend-backend
 
-**3. Pruebas** (Octubre)
+**3. Pruebas** 
 - Testing unitario (backend)
 - Testing de integración (APIs + DB)
 - Testing funcional (casos de uso principales)
 - Testing de seguridad (autenticación, validaciones)
 
-**4. Documentación** (Octubre - Noviembre)
+**4. Documentación** 
 - README completo con instrucciones de instalación
 - Documentación técnica (arquitectura, APIs, DB)
 - Diagramas (ER diagram, arquitectura del sistema)
-- Guía de deployment en la nube
 
-**5. Deployment** (Noviembre)
+**5. Deployment** 
 - Deploy frontend en Vercel/Netlify
 - Deploy backend en Render/Railway
 - Deploy DB en servicios cloud (Supabase, AWS RDS, etc.)
 - Testing en ambiente de producción
 
-**6. Video explicativo** (Noviembre)
-- Video demostrando el proyecto (5-10 min, preferentemente en inglés)
+**6. Video explicativo** 
+- Video demostrando el proyecto 
 
 ---
 
@@ -146,7 +144,6 @@ Desarrollado como Proyecto Final Integrador — Tecnicatura en Programación, UT
 | Frontend | React + TypeScript |
 | Backend | Java + Spring Boot |
 | Base de datos | MySQL |
-| Autenticación | JWT + Spring Security |
 
 ---
 
@@ -229,7 +226,7 @@ mysql -u root -p descanso_by_gi < data.sql
 | Leonel Jesús Allabay |
 | Alex Nahuel Austin |
 
-**Tutor:** [Sofia Raia]  
+**Tutor:** Sofia Raia.
 **Materia:** Trabajo Final Integrador  
 **Facultad:** UTN Facultad Regional San Nicolás
 
