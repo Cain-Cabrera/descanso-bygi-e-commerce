@@ -241,6 +241,16 @@ Frontend
 
 ---
 
+## Esquema Base de Datos
+<img width="908" height="1070" alt="diagrama EBR" src="https://github.com/user-attachments/assets/4c983def-60af-41f1-be1f-6fce08287622" />
+
+---
+
+## UML 
+<img width="4572" height="4830" alt="E-commerce User Management-2026-09-21-221645" src="https://github.com/user-attachments/assets/be77292d-349f-4fb4-9b12-465d6873b990" />
+
+---
+
 ## 🚀 Cómo empezar
 
 > ⚠️ Proyecto en etapa inicial de desarrollo — las instrucciones se irán completando a medida que avancen los sprints.
@@ -309,12 +319,7 @@ mysql -u root -p descanso_by_gi < data.sql
 
 Este proyecto se distribuye bajo licencia MIT. Ver [LICENSE](LICENSE) para más detalles.
 
-## Esquema Base de Datos
-<img width="908" height="1070" alt="diagrama EBR" src="https://github.com/user-attachments/assets/03d04a35-cedb-4e94-9571-d3d1cb4a047d" />
 
-
-## UML 
-<img width="4572" height="4830" alt="E-commerce User Management-2026-09-21-221645" src="https://github.com/user-attachments/assets/be77292d-349f-4fb4-9b12-465d6873b990" />
 
 
 
