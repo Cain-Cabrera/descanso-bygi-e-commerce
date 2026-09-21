@@ -46,12 +46,6 @@ Este proyecto construye una plataforma web que resuelve esos problemas, permitie
 - ✅ Confirmación de pedido con coordinación de pago por WhatsApp/transferencia
 - ⚙️ Panel administrativo para gestión de pedidos y stock
 
-# 🛏️ Descanso by Gi — E-commerce
-
-Plataforma de e-commerce para una colchonería real, desarrollada como Proyecto Final Integrador.
-
-Java • Spring Boot • React • TypeScript • MySQL • License
-
 ---
 
 ## 📊 Alcance
