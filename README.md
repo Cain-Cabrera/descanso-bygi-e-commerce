@@ -307,3 +307,14 @@ mysql -u root -p descanso_by_gi < data.sql
 ## 📄 Licencia
 
 Este proyecto se distribuye bajo licencia MIT. Ver [LICENSE](LICENSE) para más detalles.
+
+## Esquema Base de Datos
+<img width="908" height="1070" alt="diagrama EBR" src="https://github.com/user-attachments/assets/03d04a35-cedb-4e94-9571-d3d1cb4a047d" />
+
+
+## UML 
+<img width="4572" height="4830" alt="E-commerce User Management-2026-09-21-221645" src="https://github.com/user-attachments/assets/be77292d-349f-4fb4-9b12-465d6873b990" />
+
+
+
+
