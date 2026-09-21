@@ -46,7 +46,7 @@ Este proyecto construye una plataforma web que resuelve esos problemas, permitie
 - ✅ Confirmación de pedido con coordinación de pago por WhatsApp/transferencia
 - ⚙️ Panel administrativo para gestión de pedidos y stock
 
----
+
 
 ## 📊 Alcance
 
