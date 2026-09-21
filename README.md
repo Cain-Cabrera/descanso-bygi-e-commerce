@@ -16,14 +16,17 @@
 
 ## 📋 Índice
 
-- [Sobre el proyecto](#-sobre-el-proyecto)
-- [Funcionalidades](#-funcionalidades)
-- [Stack tecnológico](#-stack-tecnológico)
-- [Estructura del repositorio](#-estructura-del-repositorio)
-- [Cómo empezar](#-cómo-empezar)
-- [Roadmap](#-roadmap)
-- [Equipo](#-equipo)
-- [Licencia](#-licencia)
+- [Sobre el proyecto](#sobre-el-proyecto)
+- [Alcance](#alcance)
+- [Funcionalidades](#funcionalidades)
+- [Stack tecnológico](#stack-tecnológico)
+- [Estructura del repositorio](#estructura-del-repositorio)
+- [Modulo backend](#Modulo-backend)
+- [Modulo frontend](#Modulo-frontend)
+- [Cómo empezar](#cómo-empezar)
+- [Roadmap](#roadmap)
+- [Equipo](#equipo)
+- [Licencia](#licencia)
 
 ---
 
@@ -48,30 +51,6 @@ Este proyecto construye una plataforma web que resuelve esos problemas, permitie
 Plataforma de e-commerce para una colchonería real, desarrollada como Proyecto Final Integrador.
 
 Java • Spring Boot • React • TypeScript • MySQL • License
-
----
-
-## 📋 Índice
-
-- [Sobre el proyecto](#sobre-el-proyecto)
-- [Alcance](#alcance)
-- [Funcionalidades](#funcionalidades)
-- [Stack tecnológico](#stack-tecnológico)
-- [Estructura del repositorio](#estructura-del-repositorio)
-- [Modulo backend](#Modulo-backend)
-- [Modulo frontend](#Modulo-frontend)
-- [Cómo empezar](#cómo-empezar)
-- [Roadmap](#roadmap)
-- [Equipo](#equipo)
-- [Licencia](#licencia)
-
----
-
-## 📖 Sobre el proyecto
-
-**Descanso by Gi** es una colchonería real que actualmente opera únicamente a través de redes sociales y WhatsApp. Este proyecto construye una plataforma web que permite a los clientes explorar catálogo, registrarse, armar pedidos y hacer seguimiento de su compra, mientras que la administración gestiona productos, stock y pedidos desde un panel dedicado.
-
-Desarrollado como Proyecto Final Integrador — Tecnicatura en Programación, UTN Facultad Regional San Nicolás.
 
 ---
 
