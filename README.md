@@ -58,6 +58,7 @@ Java • Spring Boot • React • TypeScript • MySQL • License
 - [Funcionalidades](#funcionalidades)
 - [Stack tecnológico](#stack-tecnológico)
 - [Estructura del repositorio](#estructura-del-repositorio)
+- [Modulo backend](Modulo backend)
 - [Cómo empezar](#cómo-empezar)
 - [Roadmap](#roadmap)
 - [Equipo](#equipo)
@@ -167,6 +168,37 @@ descanso-by-gi/
 ```
 
 ---
+
+## Modulo backend
+
+```
+backend/
+├── src/
+│   ├── main/
+│   │   ├── java/com/descansobygi/
+│   │   │   ├── config/
+│   │   │   ├── controllers/
+│   │   │   ├── enums/
+│   │   │   ├── exception/
+│   │   │   ├── model/
+│   │   │   ├── repository/
+│   │   │   └── service/
+│   │   └── resources/
+│   └── test/
+├── gradle/
+├── build.gradle
+├── gradlew
+├── gradlew.bat
+├── settings.gradle
+├── .gitattributes
+├── .gitignore
+└── README.md
+
+```
+
+---
+
+
 
 ## 🚀 Cómo empezar
 
