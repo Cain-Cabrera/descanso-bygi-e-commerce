@@ -58,7 +58,7 @@ Java • Spring Boot • React • TypeScript • MySQL • License
 - [Funcionalidades](#funcionalidades)
 - [Stack tecnológico](#stack-tecnológico)
 - [Estructura del repositorio](#estructura-del-repositorio)
-- [Modulo backend](Modulo backend)
+- [Modulo backend](#Modulo-backend)
 - [Cómo empezar](#cómo-empezar)
 - [Roadmap](#roadmap)
 - [Equipo](#equipo)
