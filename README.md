@@ -198,7 +198,47 @@ backend/
 
 ---
 
+## Modulo frontend
 
+```
+Frontend
+├── Inicio
+│   ├── Presentación
+│   └── Productos destacados
+│
+├── Catálogo
+│   ├── Listado de productos
+│   ├── Categorías
+│   ├── Búsqueda
+│   ├── Filtros
+│   └── Detalle de producto
+│       └── Galería de imágenes
+│
+├── Usuario
+│   ├── Registro
+│   ├── Inicio de sesión
+│   └── Mi cuenta
+│
+├── Carrito
+│   ├── Visualizar carrito
+│   ├── Agregar productos
+│   ├── Modificar cantidades
+│   ├── Eliminar productos
+│   └── Resumen
+│
+├── Pedidos
+│   ├── Confirmar pedido
+│   ├── Historial de pedidos
+│   └── Estado del pedido
+│
+└── Administración
+    ├── Gestión de productos
+    ├── Gestión de categorías
+    ├── Gestión de stock
+    └── Gestión de pedidos
+```
+
+---
 
 ## 🚀 Cómo empezar
 
