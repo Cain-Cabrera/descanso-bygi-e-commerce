@@ -23,6 +23,8 @@
 - [Estructura del repositorio](#estructura-del-repositorio)
 - [Modulo backend](#Modulo-backend)
 - [Modulo frontend](#Modulo-frontend)
+- [Esquema Base de Datos](#Esquema-Base-de-Datos)
+- [UML](#UML)
 - [Cómo empezar](#cómo-empezar)
 - [Roadmap](#roadmap)
 - [Equipo](#equipo)
