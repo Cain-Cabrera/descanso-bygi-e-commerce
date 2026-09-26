@@ -173,6 +173,8 @@ backend/
 ---
 
 ## Modulo frontend
+La siguiente estructura corresponde a la **planificacion de los modulos y funcionalidades previstas para el frontend** del proyecto. Su implementacion se realizara durante las etapas posteriores del desarrollo.
+
 
 ```
 Frontend
