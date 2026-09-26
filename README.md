@@ -214,17 +214,6 @@ Frontend
     └── Gestión de pedidos
 ```
 
----
-
-## Esquema Base de Datos
-<img width="908" height="1070" alt="diagrama EBR" src="https://github.com/user-attachments/assets/4c983def-60af-41f1-be1f-6fce08287622" />
-
----
-
-## UML 
-<img width="4572" height="4830" alt="E-commerce User Management-2026-09-21-221645" src="https://github.com/user-attachments/assets/be77292d-349f-4fb4-9b12-465d6873b990" />
-
----
 
 ## 🚀 Cómo empezar
 
