@@ -8,7 +8,7 @@
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4-brightgreen?logo=springboot)
 ![React](https://img.shields.io/badge/React-TypeScript-blue?logo=react)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white)
-![License](https://img.shields.io/badge/license-MIT-lightgrey)
+
 
 </div>
 
