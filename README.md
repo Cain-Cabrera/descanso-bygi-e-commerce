@@ -7,7 +7,7 @@
 ![Java](https://img.shields.io/badge/Java-21-orange?logo=openjdk)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4-brightgreen?logo=springboot)
 ![React](https://img.shields.io/badge/React-TypeScript-blue?logo=react)
-![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
 
 
 </div>
@@ -26,7 +26,6 @@
 - [Cómo empezar](#cómo-empezar)
 - [Roadmap](#roadmap)
 - [Equipo](#equipo)
-- [Licencia](#licencia)
 
 ---
 
@@ -47,7 +46,6 @@ Este proyecto construye una plataforma web que resuelve esos problemas, permitie
 - ⚙️ Panel administrativo para gestión de pedidos y stock
 
 
-
 ## 📊 Alcance
 
 ### Alcance del Producto
@@ -58,7 +56,6 @@ Este proyecto construye una plataforma web que resuelve esos problemas, permitie
 - 👤 Registro, login y gestión de cuenta
 - 🧺 Carrito de compras persistente
 - ✅ Confirmación de pedido (coordinación de pago por WhatsApp/transferencia)
-- 📦 Seguimiento de pedidos en tiempo real
 - ⚙️ Panel administrativo para gestión de productos, stock y órdenes
 - 📱 Diseño responsivo (mobile, desktop)
 
@@ -75,7 +72,7 @@ Este proyecto construye una plataforma web que resuelve esos problemas, permitie
 **2. Desarrollo** 
 - Backend: APIs REST en Java Spring Boot (productos, carrito, pedidos, usuarios)
 - Frontend: Interfaz React + TypeScript (catálogo, carrito, checkout, admin, cliente)
-- Base de datos: Setup MySQL, scripts DDL/DML, migraciones
+- Base de datos: PostgreSQL, scripts DDL/DML, migraciones
 - Integración frontend-backend
 
 **3. Pruebas** 
@@ -90,25 +87,15 @@ Este proyecto construye una plataforma web que resuelve esos problemas, permitie
 - Diagramas (ER diagram)
 
 **5. Deployment** 
-- Deploy frontend en Vercel/Netlify
-- Deploy backend en Render/Railway
-- Deploy DB en servicios cloud (Supabase, AWS RDS, etc.)
+- Deploy frontend en Netlify
+- Deploy backend en Render
+- Deploy DB en Supabase
 - Testing en ambiente de producción
 
 **6. Video explicativo** 
 - Video demostrando el proyecto 
 
 ---
-
-## ✨ Funcionalidades
-
-- 🛒 Explorar catálogo con búsqueda y filtros
-- 👤 Crear cuenta y login
-- 🧺 Carrito de compras
-- ✅ Realizar pedido
-- 📦 Ver estado de pedidos
-- ⚙️ Panel administrativo (productos, stock, órdenes)
-- 📊 Reportes básicos de ventas
 
 ---
 
@@ -118,7 +105,7 @@ Este proyecto construye una plataforma web que resuelve esos problemas, permitie
 |---|---|
 | Frontend | React + TypeScript |
 | Backend | Java + Spring Boot |
-| Base de datos | MySQL |
+| Base de datos | PostgreSQL |
 
 ---
 
@@ -128,7 +115,7 @@ Este proyecto construye una plataforma web que resuelve esos problemas, permitie
 descanso-by-gi/
 ├── backend/                 # API REST en Spring Boot
 │   ├── src/
-│   ├── pom.xml
+│   ├── build.gradle
 │   └── README.md
 ├── frontend/                # Aplicación React + TypeScript
 │   ├── src/
@@ -173,46 +160,8 @@ backend/
 ---
 
 ## Modulo frontend
-La siguiente estructura corresponde a la **planificacion de los modulos y funcionalidades previstas para el frontend** del proyecto. Su implementacion se realizara durante las etapas posteriores del desarrollo.
-
-
-```
-Frontend
-├── Inicio
-│   ├── Presentación
-│   └── Productos destacados
-│
-├── Catálogo
-│   ├── Listado de productos
-│   ├── Categorías
-│   ├── Búsqueda
-│   ├── Filtros
-│   └── Detalle de producto
-│       └── Galería de imágenes
-│
-├── Usuario
-│   ├── Registro
-│   ├── Inicio de sesión
-│   └── Mi cuenta
-│
-├── Carrito
-│   ├── Visualizar carrito
-│   ├── Agregar productos
-│   ├── Modificar cantidades
-│   ├── Eliminar productos
-│   └── Resumen
-│
-├── Pedidos
-│   ├── Confirmar pedido
-│   ├── Historial de pedidos
-│   └── Estado del pedido
-│
-└── Administración
-    ├── Gestión de productos
-    ├── Gestión de categorías
-    ├── Gestión de stock
-    └── Gestión de pedidos
-```
+El frontend será desarrollado posteriormente utilizando React + TypeScript.
+La estructura definitiva se documentará a medida que avance su implementación.
 
 
 ## 🚀 Cómo empezar
@@ -223,13 +172,13 @@ Frontend
 
 - Java 21+
 - Node.js 18+
-- MySQL
+- PostgreSQL
 
 ### Backend
 
 ```bash
 cd backend
-./mvnw spring-boot:run
+./gradlew bootRun
 ```
 
 ### Frontend
@@ -244,10 +193,10 @@ pnpm dev
 
 ```bash
 # Crear base de datos
-mysql -u root -p < schema.sql
+psql -U postgres -f schema.sql
 
 # Insertar datos iniciales
-mysql -u root -p descanso_by_gi < data.sql
+psql -U postgres -d descanso_by_gi -f data.sql
 ```
 
 ---
@@ -278,10 +227,6 @@ mysql -u root -p descanso_by_gi < data.sql
 **Facultad:** UTN Facultad Regional San Nicolás
 
 ---
-
-## 📄 Licencia
-
-Este proyecto se distribuye bajo licencia MIT. Ver [LICENSE](LICENSE) para más detalles.
 
 
 
