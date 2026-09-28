@@ -16,16 +16,19 @@
 
 ## 📋 Índice
 
-- [Sobre el proyecto](#sobre-el-proyecto)
-- [Alcance](#alcance)
-- [Funcionalidades](#funcionalidades)
-- [Stack tecnológico](#stack-tecnológico)
-- [Estructura del repositorio](#estructura-del-repositorio)
-- [Modulo backend](#Modulo-backend)
-- [Modulo frontend](#Modulo-frontend)
-- [Cómo empezar](#cómo-empezar)
-- [Roadmap](#roadmap)
-- [Equipo](#equipo)
+- [Sobre el proyecto](#-sobre-el-proyecto)
+- [Funcionalidades](#-funcionalidades)
+- [Documentación](#-documentación)
+- [Diagramas](#-diagramas)
+- [Alcance](#-alcance)
+- [Stack tecnológico](#-stack-tecnológico)
+- [Estructura del repositorio](#-estructura-del-repositorio)
+- [Módulo backend](#-módulo-backend)
+- [Módulo frontend](#-módulo-frontend)
+- [Cómo empezar](#-cómo-empezar)
+- [Variables de entorno](#-variables-de-entorno)
+- [Roadmap](#-roadmap)
+- [Equipo](#-equipo)
 
 ---
 
@@ -45,6 +48,29 @@ Este proyecto construye una plataforma web que resuelve esos problemas, permitie
 - ✅ Confirmación de pedido con coordinación de pago por WhatsApp/transferencia
 - ⚙️ Panel administrativo para gestión de pedidos y stock
 
+## 📚 Documentación
+
+Toda la documentación técnica del proyecto se encuentra centralizada en la carpeta [`docs/`](./docs/).
+
+### 📄 Documentos
+
+- [Requisitos](./docs/requisitos.md)  
+  Requisitos funcionales y no funcionales del sistema.
+
+- [Reglas de negocio](./docs/reglas-negocio.md)  
+  Reglas que definen el comportamiento y las restricciones del sistema.
+
+- [Diccionario de datos](./docs/diccionario-datos.md)  
+  Descripción de las entidades, atributos y datos utilizados por el sistema.
+
+## 📐 Diagramas
+
+La carpeta [`docs/Diagramas/`](./docs/Diagramas/) contiene los principales diagramas utilizados durante el análisis y diseño del proyecto:
+
+- [Diagrama ERR - Base de datos](./docs/Diagramas/Diagrama%20ERR-Base%20de%20datos.jpeg)
+- [Diagrama UML](./docs/Diagramas/UML.png)
+
+Los diagramas permiten visualizar la estructura de la base de datos y el diseño de las principales entidades y relaciones del sistema.
 
 ## 📊 Alcance
 
@@ -198,7 +224,28 @@ psql -U postgres -f schema.sql
 # Insertar datos iniciales
 psql -U postgres -d descanso_by_gi -f data.sql
 ```
+## 🔐 Variables de entorno
 
+> ⚠️ **Importante:** El backend requiere estas tres variables para conectarse a PostgreSQL.  
+> **Nunca subas credenciales reales al repositorio.**
+
+| Variable | Descripción | Ejemplo |
+|:---|:---|:---|
+| `DB_URL` | URL de conexión a PostgreSQL | `jdbc:postgresql://<host>:<puerto>/<base_de_datos>` |
+| `DB_USERNAME` | Usuario de la base de datos | `<usuario>` |
+| `DB_PASSWORD` | Contraseña de la base de datos | `<contraseña>` |
+
+
+### 🖥️ Configuración local
+
+En **Windows PowerShell**, ejecutá:
+
+```powershell
+$env:DB_URL=jdbc:postgresql://<host>:<puerto>/<base_de_datos>
+$env:DB_USERNAME=<usuario>
+$env:DB_PASSWORD=<contraseña>
+
+```
 ---
 
 ## 🗺️ Roadmap
