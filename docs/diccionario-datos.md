@@ -4,7 +4,7 @@
 
 El presente documento describe las tablas, campos, tipos de datos y relaciones que conforman la base de datos del sistema Descanso by Gi.
 
-La base de datos utiliza MySQL y sigue un modelo relacional.
+La base de datos utiliza PostgreSQL y sigue un modelo relacional.
 
 ---
 
@@ -22,7 +22,7 @@ Almacena la informacion de los usuarios registrados en el sistema.
 | mail | VARCHAR(150) | UNIQUE | No | Correo electronico del usuario |
 | contrasena | VARCHAR(255) | - | No | Contrasena del usuario |
 | celular | VARCHAR(30) | - | Si | Numero de celular del usuario |
-| rol | ENUM | - | No | Rol del usuario dentro del sistema |
+| rol | VARCHAR(20) | - | No | Rol del usuario dentro del sistema |
 
 ### Valores de rol
 
@@ -69,8 +69,8 @@ Almacena la informacion de los productos disponibles en el catalogo.
 | eliminado | BOOLEAN | - | No | Indica si el registro fue eliminado logicamente |
 | nombre | VARCHAR(150) | - | No | Nombre del producto |
 | descripcion | VARCHAR(500) | - | Si | Descripcion del producto |
-| precio | DECIMAL(10,2) | - | No | Precio actual del producto |
-| stock | INT | - | No | Cantidad disponible del producto |
+| precio | NUMERIC(10,2) | - | No | Precio actual del producto |
+| stock | INTEGER | - | No | Cantidad disponible del producto |
 | marca_id | BIGINT | FK | No | Identificador de la marca del producto |
 | categoria_id | BIGINT | FK | No | Identificador de la categoria del producto |
 
@@ -109,8 +109,8 @@ Almacena los carritos de compra asociados a los usuarios.
 | id | BIGINT | PK | No | Identificador unico del carrito |
 | fecha_alta | TIMESTAMP | - | No | Fecha y hora de alta del registro |
 | eliminado | BOOLEAN | - | No | Indica si el registro fue eliminado logicamente |
-| estado | ENUM | - | No | Estado actual del carrito |
-| usuario_id | BIGINT | FK, UNIQUE | No | Identificador del usuario propietario del carrito |
+| estado | VARCHAR(20) | - | No | Estado actual del carrito |
+| usuario_id | BIGINT | FK | No | Identificador del usuario propietario del carrito |
 
 ### Valores de estado
 
@@ -120,6 +120,7 @@ Almacena los carritos de compra asociados a los usuarios.
 ### Relacion
 
 - `usuario_id` referencia a `usuarios.id`.
+- Un usuario puede tener varios carritos a lo largo del tiempo.
 - Un usuario puede tener un unico carrito activo.
 
 ---
@@ -133,8 +134,8 @@ Almacena los productos incluidos dentro de los carritos.
 | id | BIGINT | PK | No | Identificador unico del item |
 | fecha_alta | TIMESTAMP | - | No | Fecha y hora de alta del registro |
 | eliminado | BOOLEAN | - | No | Indica si el registro fue eliminado logicamente |
-| cantidad | INT | - | No | Cantidad del producto dentro del carrito |
-| subtotal | DECIMAL(10,2) | - | No | Subtotal correspondiente al producto |
+| cantidad | INTEGER | - | No | Cantidad del producto dentro del carrito |
+| subtotal | NUMERIC(10,2) | - | No | Subtotal correspondiente al producto |
 | carrito_id | BIGINT | FK | No | Identificador del carrito |
 | producto_id | BIGINT | FK | No | Identificador del producto |
 
@@ -156,18 +157,9 @@ Almacena los pedidos realizados por los usuarios.
 | id | BIGINT | PK | No | Identificador unico del pedido |
 | fecha_alta | TIMESTAMP | - | No | Fecha y hora de alta del pedido |
 | eliminado | BOOLEAN | - | No | Indica si el registro fue eliminado logicamente |
-| estado | ENUM | - | No | Estado actual del pedido |
-| total | DECIMAL(10,2) | - | No | Importe total del pedido |
-| forma_de_pago | ENUM | - | No | Forma de pago seleccionada |
+| total | NUMERIC(10,2) | - | No | Importe total del pedido |
+| forma_de_pago | VARCHAR(20) | - | No | Forma de pago seleccionada |
 | usuario_id | BIGINT | FK | No | Identificador del usuario que realiza el pedido |
-
-### Valores de estado
-
-- PENDIENTE
-- CONFIRMADO
-- ENVIADO
-- ENTREGADO
-- CANCELADO
 
 ### Valores de forma de pago
 
@@ -191,9 +183,9 @@ Almacena el detalle de los productos incluidos en cada pedido.
 | id | BIGINT | PK | No | Identificador unico del detalle |
 | fecha_alta | TIMESTAMP | - | No | Fecha y hora de alta del registro |
 | eliminado | BOOLEAN | - | No | Indica si el registro fue eliminado logicamente |
-| cantidad | INT | - | No | Cantidad del producto solicitado |
-| precio_unitario | DECIMAL(10,2) | - | No | Precio del producto al momento del pedido |
-| subtotal | DECIMAL(10,2) | - | No | Subtotal correspondiente al producto |
+| cantidad | INTEGER | - | No | Cantidad del producto solicitado |
+| precio_unitario | NUMERIC(10,2) | - | No | Precio del producto al momento del pedido |
+| subtotal | NUMERIC(10,2) | - | No | Subtotal correspondiente al producto |
 | pedido_id | BIGINT | FK | No | Identificador del pedido |
 | producto_id | BIGINT | FK | No | Identificador del producto |
 
@@ -210,7 +202,7 @@ Almacena el detalle de los productos incluidos en cada pedido.
 
 | Tabla origen | Cardinalidad | Tabla destino | Descripcion |
 |---|---|---|---|
-| usuarios | 1 : 1 | carritos | Un usuario tiene un carrito |
+| usuarios | 1 : N | carritos | Un usuario puede tener varios carritos a lo largo del tiempo, pero solo uno activo |
 | carritos | 1 : N | items_carrito | Un carrito contiene varios items |
 | productos | 1 : N | items_carrito | Un producto puede aparecer en varios items |
 | usuarios | 1 : N | pedidos | Un usuario puede realizar varios pedidos |
@@ -236,7 +228,12 @@ Ejemplos:
 
 - `usuarios`
 - `categorias`
+- `marcas`
+- `productos`
+- `imagenes`
+- `carritos`
 - `items_carrito`
+- `pedidos`
 - `detalles_pedido`
 - `categoria_id`
 - `marca_id`
