@@ -123,8 +123,6 @@ Los diagramas permiten visualizar la estructura de la base de datos y el diseño
 
 ---
 
----
-
 ## 🧱 Stack tecnológico
 
 | Capa | Tecnología |
@@ -186,9 +184,27 @@ backend/
 ---
 
 ## Modulo frontend
-El frontend será desarrollado posteriormente utilizando React + TypeScript.
-La estructura definitiva se documentará a medida que avance su implementación.
+El frontend será desarrollado utilizando React + TypeScript.
 
+```
+frontend/
+├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── services/
+│   ├── types/
+│   ├── hooks/
+│   ├── App.tsx
+│   ├── main.tsx
+│   └── index.css
+├── public/
+├── .env
+├── .gitignore
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+└── README.md
+```
 
 ## 🚀 Cómo empezar
 
