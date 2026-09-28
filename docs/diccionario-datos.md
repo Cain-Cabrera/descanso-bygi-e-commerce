@@ -1,241 +1,198 @@
 # Diccionario de datos — Descanso by Gi
 
-## 1. Descripcion
+## 1. Descripcion general
 
-El presente documento describe las tablas, campos, tipos de datos y relaciones que conforman la base de datos del sistema Descanso by Gi.
+La base de datos del sistema Descanso by Gi utiliza PostgreSQL. Las tablas se encuentran relacionadas mediante claves primarias y claves foraneas. Los registros utilizan eliminacion logica mediante el campo `eliminado`.
 
-La base de datos utiliza PostgreSQL y sigue un modelo relacional.
+## 2. Diccionario de datos
 
----
+### Tabla: usuarios
 
-## 2. Tabla: usuarios
+| Campo | Tipo | Restricciones | Descripcion |
+|---|---|---|---|
+| id | BIGINT | PK | Identificador unico del usuario |
+| fecha_alta | TIMESTAMP | NOT NULL | Fecha y hora de creacion |
+| eliminado | BOOLEAN | NOT NULL | Indica si el registro fue eliminado logicamente |
+| nombre | VARCHAR(100) | NOT NULL | Nombre del usuario |
+| apellido | VARCHAR(100) | NOT NULL | Apellido del usuario |
+| mail | VARCHAR(150) | NOT NULL, UNIQUE | Correo electronico del usuario |
+| contrasena | VARCHAR(255) | NOT NULL | Contrasena del usuario |
+| celular | VARCHAR(30) | | Numero de celular |
+| rol | VARCHAR(20) | NOT NULL | Rol del usuario |
 
-Almacena la informacion de los usuarios registrados en el sistema.
-
-| Campo | Tipo | Clave | Nulo | Descripcion |
-|---|---|---|---|---|
-| id | BIGINT | PK | No | Identificador unico del usuario |
-| fecha_alta | TIMESTAMP | - | No | Fecha y hora de alta del registro |
-| eliminado | BOOLEAN | - | No | Indica si el registro fue eliminado logicamente |
-| nombre | VARCHAR(100) | - | No | Nombre del usuario |
-| apellido | VARCHAR(100) | - | No | Apellido del usuario |
-| mail | VARCHAR(150) | UNIQUE | No | Correo electronico del usuario |
-| contrasena | VARCHAR(255) | - | No | Contrasena del usuario |
-| celular | VARCHAR(30) | - | Si | Numero de celular del usuario |
-| rol | VARCHAR(20) | - | No | Rol del usuario dentro del sistema |
-
-### Valores de rol
+Valores permitidos para `rol`:
 
 - ADMINISTRADOR
 - USUARIO
 
 ---
 
-## 3. Tabla: categorias
+### Tabla: categorias
 
-Almacena las categorias utilizadas para clasificar los productos.
-
-| Campo | Tipo | Clave | Nulo | Descripcion |
-|---|---|---|---|---|
-| id | BIGINT | PK | No | Identificador unico de la categoria |
-| fecha_alta | TIMESTAMP | - | No | Fecha y hora de alta del registro |
-| eliminado | BOOLEAN | - | No | Indica si el registro fue eliminado logicamente |
-| nombre | VARCHAR(100) | - | No | Nombre de la categoria |
-| descripcion | VARCHAR(255) | - | Si | Descripcion de la categoria |
+| Campo | Tipo | Restricciones | Descripcion |
+|---|---|---|---|
+| id | BIGINT | PK | Identificador unico de la categoria |
+| fecha_alta | TIMESTAMP | NOT NULL | Fecha y hora de creacion |
+| eliminado | BOOLEAN | NOT NULL | Indica si el registro fue eliminado logicamente |
+| nombre | VARCHAR(100) | NOT NULL | Nombre de la categoria |
+| descripcion | VARCHAR(255) | | Descripcion de la categoria |
 
 ---
 
-## 4. Tabla: marcas
+### Tabla: marcas
 
-Almacena las marcas asociadas a los productos.
-
-| Campo | Tipo | Clave | Nulo | Descripcion |
-|---|---|---|---|---|
-| id | BIGINT | PK | No | Identificador unico de la marca |
-| fecha_alta | TIMESTAMP | - | No | Fecha y hora de alta del registro |
-| eliminado | BOOLEAN | - | No | Indica si el registro fue eliminado logicamente |
-| nombre | VARCHAR(100) | - | No | Nombre de la marca |
+| Campo | Tipo | Restricciones | Descripcion |
+|---|---|---|---|
+| id | BIGINT | PK | Identificador unico de la marca |
+| fecha_alta | TIMESTAMP | NOT NULL | Fecha y hora de creacion |
+| eliminado | BOOLEAN | NOT NULL | Indica si el registro fue eliminado logicamente |
+| nombre | VARCHAR(100) | NOT NULL | Nombre de la marca |
 
 ---
 
-## 5. Tabla: productos
+### Tabla: productos
 
-Almacena la informacion de los productos disponibles en el catalogo.
+| Campo | Tipo | Restricciones | Descripcion |
+|---|---|---|---|
+| id | BIGINT | PK | Identificador unico del producto |
+| fecha_alta | TIMESTAMP | NOT NULL | Fecha y hora de creacion |
+| eliminado | BOOLEAN | NOT NULL | Indica si el registro fue eliminado logicamente |
+| nombre | VARCHAR(150) | NOT NULL | Nombre del producto |
+| descripcion | VARCHAR(500) | | Descripcion del producto |
+| precio | NUMERIC(10,2) | NOT NULL | Precio actual del producto |
+| stock | INTEGER | NOT NULL | Cantidad disponible del producto |
+| marca_id | BIGINT | FK, NOT NULL | Marca a la que pertenece el producto |
+| categoria_id | BIGINT | FK, NOT NULL | Categoria a la que pertenece el producto |
 
-| Campo | Tipo | Clave | Nulo | Descripcion |
-|---|---|---|---|---|
-| id | BIGINT | PK | No | Identificador unico del producto |
-| fecha_alta | TIMESTAMP | - | No | Fecha y hora de alta del registro |
-| eliminado | BOOLEAN | - | No | Indica si el registro fue eliminado logicamente |
-| nombre | VARCHAR(150) | - | No | Nombre del producto |
-| descripcion | VARCHAR(500) | - | Si | Descripcion del producto |
-| precio | NUMERIC(10,2) | - | No | Precio actual del producto |
-| stock | INTEGER | - | No | Cantidad disponible del producto |
-| marca_id | BIGINT | FK | No | Identificador de la marca del producto |
-| categoria_id | BIGINT | FK | No | Identificador de la categoria del producto |
-
-### Relaciones
+Relaciones:
 
 - `marca_id` referencia a `marcas.id`.
 - `categoria_id` referencia a `categorias.id`.
 
 ---
 
-## 6. Tabla: imagenes
+### Tabla: imagenes
 
-Almacena las imagenes asociadas a los productos.
+| Campo | Tipo | Restricciones | Descripcion |
+|---|---|---|---|
+| id | BIGINT | PK | Identificador unico de la imagen |
+| fecha_alta | TIMESTAMP | NOT NULL | Fecha y hora de creacion |
+| eliminado | BOOLEAN | NOT NULL | Indica si el registro fue eliminado logicamente |
+| url | VARCHAR(500) | NOT NULL | URL de la imagen almacenada |
+| producto_id | BIGINT | FK, NOT NULL | Producto al que pertenece la imagen |
 
-| Campo | Tipo | Clave | Nulo | Descripcion |
-|---|---|---|---|---|
-| id | BIGINT | PK | No | Identificador unico de la imagen |
-| fecha_alta | TIMESTAMP | - | No | Fecha y hora de alta del registro |
-| eliminado | BOOLEAN | - | No | Indica si el registro fue eliminado logicamente |
-| url | VARCHAR(500) | - | No | URL de la imagen almacenada |
-| producto_id | BIGINT | FK | No | Identificador del producto al que pertenece la imagen |
-
-### Relacion
+Relaciones:
 
 - `producto_id` referencia a `productos.id`.
-- Un producto puede tener varias imagenes.
 
 ---
 
-## 7. Tabla: carritos
+### Tabla: carritos
 
-Almacena los carritos de compra asociados a los usuarios.
+| Campo | Tipo | Restricciones | Descripcion |
+|---|---|---|---|
+| id | BIGINT | PK | Identificador unico del carrito |
+| fecha_alta | TIMESTAMP | NOT NULL | Fecha y hora de creacion |
+| eliminado | BOOLEAN | NOT NULL | Indica si el registro fue eliminado logicamente |
+| estado | VARCHAR(20) | NOT NULL | Estado actual del carrito |
+| usuario_id | BIGINT | FK, NOT NULL | Usuario propietario del carrito |
 
-| Campo | Tipo | Clave | Nulo | Descripcion |
-|---|---|---|---|---|
-| id | BIGINT | PK | No | Identificador unico del carrito |
-| fecha_alta | TIMESTAMP | - | No | Fecha y hora de alta del registro |
-| eliminado | BOOLEAN | - | No | Indica si el registro fue eliminado logicamente |
-| estado | VARCHAR(20) | - | No | Estado actual del carrito |
-| usuario_id | BIGINT | FK | No | Identificador del usuario propietario del carrito |
-
-### Valores de estado
+Valores permitidos para `estado`:
 
 - ACTIVO
 - ELIMINADO
 
-### Relacion
+Relaciones:
 
 - `usuario_id` referencia a `usuarios.id`.
-- Un usuario puede tener varios carritos a lo largo del tiempo.
-- Un usuario puede tener un unico carrito activo.
+- No posee restriccion `UNIQUE`, permitiendo conservar carritos historicos.
 
 ---
 
-## 8. Tabla: items_carrito
+### Tabla: items_carrito
 
-Almacena los productos incluidos dentro de los carritos.
+| Campo | Tipo | Restricciones | Descripcion |
+|---|---|---|---|
+| id | BIGINT | PK | Identificador unico del item |
+| fecha_alta | TIMESTAMP | NOT NULL | Fecha y hora de creacion |
+| eliminado | BOOLEAN | NOT NULL | Indica si el registro fue eliminado logicamente |
+| cantidad | INTEGER | NOT NULL | Cantidad del producto en el carrito |
+| subtotal | NUMERIC(10,2) | NOT NULL | Subtotal correspondiente a la cantidad del producto |
+| carrito_id | BIGINT | FK, NOT NULL | Carrito al que pertenece el item |
+| producto_id | BIGINT | FK, NOT NULL | Producto agregado al carrito |
 
-| Campo | Tipo | Clave | Nulo | Descripcion |
-|---|---|---|---|---|
-| id | BIGINT | PK | No | Identificador unico del item |
-| fecha_alta | TIMESTAMP | - | No | Fecha y hora de alta del registro |
-| eliminado | BOOLEAN | - | No | Indica si el registro fue eliminado logicamente |
-| cantidad | INTEGER | - | No | Cantidad del producto dentro del carrito |
-| subtotal | NUMERIC(10,2) | - | No | Subtotal correspondiente al producto |
-| carrito_id | BIGINT | FK | No | Identificador del carrito |
-| producto_id | BIGINT | FK | No | Identificador del producto |
-
-### Relaciones
+Relaciones:
 
 - `carrito_id` referencia a `carritos.id`.
 - `producto_id` referencia a `productos.id`.
-- Un carrito puede contener varios items.
-- Cada item corresponde a un producto.
 
 ---
 
-## 9. Tabla: pedidos
+### Tabla: pedidos
 
-Almacena los pedidos realizados por los usuarios.
+| Campo | Tipo | Restricciones | Descripcion |
+|---|---|---|---|
+| id | BIGINT | PK | Identificador unico del pedido |
+| fecha_alta | TIMESTAMP | NOT NULL | Fecha y hora de creacion |
+| eliminado | BOOLEAN | NOT NULL | Indica si el registro fue eliminado logicamente |
+| total | NUMERIC(10,2) | NOT NULL | Importe total del pedido |
+| forma_de_pago | VARCHAR(20) | NOT NULL | Forma de pago seleccionada |
+| usuario_id | BIGINT | FK, NOT NULL | Usuario que realizo el pedido |
 
-| Campo | Tipo | Clave | Nulo | Descripcion |
-|---|---|---|---|---|
-| id | BIGINT | PK | No | Identificador unico del pedido |
-| fecha_alta | TIMESTAMP | - | No | Fecha y hora de alta del pedido |
-| eliminado | BOOLEAN | - | No | Indica si el registro fue eliminado logicamente |
-| total | NUMERIC(10,2) | - | No | Importe total del pedido |
-| forma_de_pago | VARCHAR(20) | - | No | Forma de pago seleccionada |
-| usuario_id | BIGINT | FK | No | Identificador del usuario que realiza el pedido |
-
-### Valores de forma de pago
+Valores permitidos para `forma_de_pago`:
 
 - EFECTIVO
 - TARJETA
 - TRANSFERENCIA
 
-### Relacion
+Relaciones:
 
 - `usuario_id` referencia a `usuarios.id`.
-- Un usuario puede realizar varios pedidos.
+
+> Nota: La tabla `pedidos` no contiene un campo `estado`.
 
 ---
 
-## 10. Tabla: detalles_pedido
+### Tabla: detalles_pedido
 
-Almacena el detalle de los productos incluidos en cada pedido.
+| Campo | Tipo | Restricciones | Descripcion |
+|---|---|---|---|
+| id | BIGINT | PK | Identificador unico del detalle |
+| fecha_alta | TIMESTAMP | NOT NULL | Fecha y hora de creacion |
+| eliminado | BOOLEAN | NOT NULL | Indica si el registro fue eliminado logicamente |
+| cantidad | INTEGER | NOT NULL | Cantidad de unidades del producto |
+| precio_unitario | NUMERIC(10,2) | NOT NULL | Precio del producto al momento de realizar el pedido |
+| subtotal | NUMERIC(10,2) | NOT NULL | Subtotal del detalle |
+| pedido_id | BIGINT | FK, NOT NULL | Pedido al que pertenece el detalle |
+| producto_id | BIGINT | FK, NOT NULL | Producto incluido en el pedido |
 
-| Campo | Tipo | Clave | Nulo | Descripcion |
-|---|---|---|---|---|
-| id | BIGINT | PK | No | Identificador unico del detalle |
-| fecha_alta | TIMESTAMP | - | No | Fecha y hora de alta del registro |
-| eliminado | BOOLEAN | - | No | Indica si el registro fue eliminado logicamente |
-| cantidad | INTEGER | - | No | Cantidad del producto solicitado |
-| precio_unitario | NUMERIC(10,2) | - | No | Precio del producto al momento del pedido |
-| subtotal | NUMERIC(10,2) | - | No | Subtotal correspondiente al producto |
-| pedido_id | BIGINT | FK | No | Identificador del pedido |
-| producto_id | BIGINT | FK | No | Identificador del producto |
-
-### Relaciones
+Relaciones:
 
 - `pedido_id` referencia a `pedidos.id`.
 - `producto_id` referencia a `productos.id`.
-- Un pedido puede contener varios detalles.
-- Cada detalle corresponde a un producto.
 
 ---
 
-## 11. Resumen de relaciones
+## 3. Resumen de relaciones
 
-| Tabla origen | Cardinalidad | Tabla destino | Descripcion |
-|---|---|---|---|
-| usuarios | 1 : N | carritos | Un usuario puede tener varios carritos a lo largo del tiempo, pero solo uno activo |
-| carritos | 1 : N | items_carrito | Un carrito contiene varios items |
-| productos | 1 : N | items_carrito | Un producto puede aparecer en varios items |
-| usuarios | 1 : N | pedidos | Un usuario puede realizar varios pedidos |
-| pedidos | 1 : N | detalles_pedido | Un pedido contiene varios detalles |
-| productos | 1 : N | detalles_pedido | Un producto puede aparecer en varios detalles |
-| categorias | 1 : N | productos | Una categoria puede tener varios productos |
-| marcas | 1 : N | productos | Una marca puede tener varios productos |
-| productos | 1 : N | imagenes | Un producto puede tener varias imagenes |
+| Relacion | Cardinalidad |
+|---|---|
+| Usuario - Carrito | 1:N |
+| Usuario - Pedido | 1:N |
+| Categoria - Producto | 1:N |
+| Marca - Producto | 1:N |
+| Producto - Imagen | 1:N |
+| Carrito - ItemCarrito | 1:N |
+| Producto - ItemCarrito | 1:N |
+| Pedido - DetallePedido | 1:N |
+| Producto - DetallePedido | 1:N |
 
----
+## 4. Consideraciones
 
-## 12. Convencion de nombres
-
-Las tablas y columnas de la base de datos utilizan una convencion de nombres consistente:
-
-- Nombres en minusculas.
-- Sin tildes.
-- Tablas en plural.
-- Palabras compuestas utilizando guion bajo.
-- Claves foraneas utilizando el formato `entidad_id`.
-
-Ejemplos:
-
-- `usuarios`
-- `categorias`
-- `marcas`
-- `productos`
-- `imagenes`
-- `carritos`
-- `items_carrito`
-- `pedidos`
-- `detalles_pedido`
-- `categoria_id`
-- `marca_id`
-- `producto_id`
-- `usuario_id`
+- `Base` no constituye una tabla independiente; sus atributos se heredan en las entidades correspondientes.
+- Las relaciones se implementan mediante claves foraneas.
+- Los campos monetarios utilizan `NUMERIC(10,2)`.
+- Los campos `cantidad` y `stock` utilizan `INTEGER`.
+- Los valores que anteriormente podrian representarse mediante ENUM se almacenan como `VARCHAR` y pueden restringirse mediante `CHECK` en PostgreSQL.
+- La tabla `imagenes` almacena unicamente la URL asociada al producto, sin campo `descripcion`.
+- La relacion entre `usuarios` y `carritos` es 1:N para permitir conservar carritos historicos, manteniendo conceptualmente un unico carrito activo por usuario.
