@@ -259,11 +259,11 @@ Estos indices permiten optimizar principalmente las consultas que utilizan clave
 
 ### Subtotal de items_carrito
 
-El campo `subtotal` representa el importe correspondiente a la cantidad de un producto dentro del carrito.
+El campo `subtotal` representa el importe correspondiente a la cantidad del producto dentro del carrito.
 
-Se considera un campo derivado porque su valor se obtiene a partir de la cantidad y el precio del producto.
+Su valor se obtiene a partir de la cantidad y el precio vigente del producto.
 
-Su almacenamiento permite consultar directamente el importe correspondiente al item del carrito.
+Se almacena para facilitar la consulta del importe correspondiente al item del carrito.
 
 ### Subtotal de detalles_pedido
 
