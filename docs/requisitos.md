@@ -80,7 +80,7 @@ El frontend debera desarrollarse utilizando React y TypeScript.
 El backend debera desarrollarse utilizando Java y Spring Boot.
 
 ### RNF04 — Base de datos
-El sistema debera utilizar MySQL para la persistencia de los datos.
+El sistema debera utilizar PostgreSQL para la persistencia de los datos.
 
 ### RNF05 — Persistencia
 La informacion del sistema debera almacenarse de forma persistente en la base de datos.
