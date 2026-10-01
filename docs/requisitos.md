@@ -44,8 +44,8 @@ El sistema debera permitir al usuario confirmar los productos de su carrito y ge
 ### RF14 — Consulta de pedidos
 El sistema debera permitir al usuario consultar el historial de sus pedidos.
 
-### RF15 — Consulta del estado del pedido
-El sistema debera permitir al usuario consultar el estado de sus pedidos.
+### RF15 — Consulta de pedidos
+El sistema debera permitir al usuario consultar la informacion de sus pedidos realizados.
 
 ### RF16 — Gestion de productos
 El sistema debera permitir al administrador registrar, modificar, consultar y eliminar productos.
@@ -63,7 +63,7 @@ El sistema debera permitir asociar imagenes a los productos y gestionar dichas i
 El sistema debera permitir al administrador consultar y actualizar el stock de los productos.
 
 ### RF21 — Gestion de pedidos
-El sistema debera permitir al administrador consultar los pedidos y actualizar su estado.
+El sistema debera permitir al administrador consultar y gestionar los pedidos registrados.   
 
 ### RF22 — Gestion de usuarios
 El sistema debera permitir al administrador consultar y gestionar los usuarios registrados.
