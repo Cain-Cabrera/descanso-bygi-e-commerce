@@ -1,4 +1,4 @@
-package com.descansobygi.dto;
+package com.descansobygi.dto.marca;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

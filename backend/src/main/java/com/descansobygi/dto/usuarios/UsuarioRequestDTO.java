@@ -1,4 +1,4 @@
-package com.descansobygi.dto;
+package com.descansobygi.dto.usuarios;
 
 import com.descansobygi.enums.Rol;
 import jakarta.validation.constraints.*;

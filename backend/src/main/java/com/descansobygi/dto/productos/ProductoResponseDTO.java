@@ -1,4 +1,4 @@
-package com.descansobygi.dto;
+package com.descansobygi.dto.productos;
 import java.math.BigDecimal;
 
 // devuelve los datos de un producto al cliente

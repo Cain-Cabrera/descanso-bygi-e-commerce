@@ -1,4 +1,4 @@
-package com.descansobygi.dto;
+package com.descansobygi.dto.categorias;
 
 
 import jakarta.validation.constraints.NotBlank;

@@ -1,4 +1,4 @@
-package com.descansobygi.dto;
+package com.descansobygi.dto.carrito;
 
 
 // dto para solicitar la creacion de un carrito

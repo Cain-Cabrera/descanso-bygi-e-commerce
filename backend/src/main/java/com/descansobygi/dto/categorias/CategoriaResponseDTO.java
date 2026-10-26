@@ -1,4 +1,4 @@
-package com.descansobygi.dto;
+package com.descansobygi.dto.categorias;
 
 
 // va devolver los datos de una categoria al cliente

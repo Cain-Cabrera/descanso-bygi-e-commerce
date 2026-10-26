@@ -1,4 +1,4 @@
-package com.descansobygi.dto;
+package com.descansobygi.dto.carrito;
 
 import com.descansobygi.enums.EstadoCarrito;
 

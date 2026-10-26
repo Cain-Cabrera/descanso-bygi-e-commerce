@@ -1,5 +1,5 @@
 
-package com.descansobygi.dto;
+package com.descansobygi.dto.login;
 
 import com.descansobygi.enums.Rol;
 

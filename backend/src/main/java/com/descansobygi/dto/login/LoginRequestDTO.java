@@ -1,4 +1,4 @@
-package com.descansobygi.dto;
+package com.descansobygi.dto.login;
 
 
 import jakarta.validation.constraints.Email;

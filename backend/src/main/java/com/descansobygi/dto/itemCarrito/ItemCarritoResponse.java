@@ -1,4 +1,4 @@
-package com.descansobygi.dto;
+package com.descansobygi.dto.itemCarrito;
 import java.math.BigDecimal;
 // devuelve la info de un producto dentro del carrito
 public record ItemCarritoResponse(

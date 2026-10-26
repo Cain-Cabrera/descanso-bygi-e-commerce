@@ -1,7 +1,6 @@
-package com.descansobygi.dto;
+package com.descansobygi.dto.detallePedido;
 
 import java.math.BigDecimal;
-import java.nio.Buffer;
 
 // devuelve la informacion historica de un produco
 

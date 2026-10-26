@@ -1,4 +1,4 @@
-package com.descansobygi.dto;
+package com.descansobygi.dto.productos;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;

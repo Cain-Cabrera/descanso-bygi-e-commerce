@@ -1,4 +1,4 @@
-package com.descansobygi.dto;
+package com.descansobygi.dto.marca;
 
 
 // devuelve los datos de la marca al cliente

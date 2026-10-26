@@ -1,4 +1,4 @@
-package com.descansobygi.dto;
+package com.descansobygi.dto.pedido;
 
 import com.descansobygi.enums.FormaDePago;
 import java.math.BigDecimal;
