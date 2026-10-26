@@ -2,14 +2,20 @@ package com.descansobygi.service.usuarios;
 
 import com.descansobygi.dto.usuarios.UsuarioRequestDTO;
 import com.descansobygi.dto.usuarios.UsuarioResponseDTO;
+import com.descansobygi.enums.EstadoCarrito;
+import com.descansobygi.model.Carrito;
 import com.descansobygi.model.Usuario;
+import com.descansobygi.repository.carrito.CarritoRepository;
 import com.descansobygi.repository.usuarios.UsuarioRepository;
+import com.descansobygi.service.carrito.ICarritoService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class UsuarioServiceImpl implements IUsuarioService{
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private CarritoRepository carritoRepository;
 
     @Transactional
     @Override
@@ -22,6 +28,14 @@ public class UsuarioServiceImpl implements IUsuarioService{
 
         // Guradamos en la base de datos
         Usuario usuarioGuardado  = usuarioRepository.save(usuario);
+
+        // Crear carrito automático
+        // Después en registrar()
+        Carrito carrito = new Carrito();
+        carrito.setUsuario(usuarioGuardado);
+        carrito.setEstado(EstadoCarrito.ACTIVO);
+        carritoRepository.save(carrito);
+
         return  UsuarioResponseDTO.fromEntidad(usuarioGuardado);
     }
 
