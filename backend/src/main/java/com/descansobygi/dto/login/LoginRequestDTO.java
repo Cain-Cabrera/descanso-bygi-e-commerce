@@ -1,6 +1,7 @@
 package com.descansobygi.dto.login;
 
 
+import com.descansobygi.model.Usuario;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -17,5 +18,13 @@ public record LoginRequestDTO(
         @Size(max = 72, message = "La contrasena no puede superar los 72 caracteres")
         String contrasena
 ){
-
+        public static LoginResponseDTO fromEntidad(Usuario usuario) {
+                return new LoginResponseDTO(
+                        usuario.getId(),
+                        usuario.getNombre(),
+                        usuario.getApellido(),
+                        usuario.getMail(),
+                        usuario.getRol()
+                );
+        }
 }

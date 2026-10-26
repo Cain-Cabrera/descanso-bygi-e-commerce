@@ -1,7 +1,12 @@
 package com.descansobygi.dto.itemCarrito;
 
+import com.descansobygi.model.Carrito;
+import com.descansobygi.model.ItemCarrito;
+import com.descansobygi.model.Producto;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+
+import java.math.BigDecimal;
 
 // recibe los datos necesarios para agregar un procucto al carrito
 
@@ -21,4 +26,13 @@ public record ItemCarritoRequestDTO(
 
 
 ) {
+        public ItemCarrito toEntidad(Carrito carrito, Producto producto) {
+                ItemCarrito item = new ItemCarrito();
+                item.setCantidad(this.cantidad());
+                item.setCarrito(carrito);
+                item.setProducto(producto);
+                // El subtotal se calcula en el Service: cantidad * precio
+                item.setSubtotal(producto.getPrecio().multiply(new BigDecimal(this.cantidad())));
+                return item;
+        }
 }

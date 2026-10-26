@@ -1,6 +1,7 @@
 package com.descansobygi.dto.usuarios;
 
 import com.descansobygi.enums.Rol;
+import com.descansobygi.model.Usuario;
 import jakarta.validation.constraints.*;
 
 
@@ -39,6 +40,17 @@ public record UsuarioRequestDTO (
 
 ) {
 
+
+    public Usuario toEntidad() {
+        Usuario usuario = new Usuario();
+        usuario.setNombre(this.nombre());
+        usuario.setApellido(this.apellido());
+        usuario.setMail(this.mail());
+        usuario.setContrasena(this.contrasena());
+        usuario.setCelular(this.celular());
+        usuario.setRol(this.rol());
+        return usuario;
+    }
 }
 
 

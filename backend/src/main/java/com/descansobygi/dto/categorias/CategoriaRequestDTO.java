@@ -1,6 +1,7 @@
 package com.descansobygi.dto.categorias;
 
 
+import com.descansobygi.model.Categoria;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -15,4 +16,10 @@ public record CategoriaRequestDTO(
         @Size(max = 100, message = "La descripcion no debe superar los 100 caracteres")
         String descripcion
 ) {
+        public Categoria toEntidad() {
+                Categoria categoria = new Categoria();
+                categoria.setNombre(this.nombre());
+                categoria.setDescripcion(this.descripcion());
+                return categoria;
+        }
 }

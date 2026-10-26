@@ -1,5 +1,6 @@
 package com.descansobygi.dto.marca;
 
+import com.descansobygi.model.Marca;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -12,4 +13,10 @@ public record MarcaRequestDTO(
         @Size(max = 20, message = "El nombre no puede superar los 20 caracteres")
         String nombre
 ) {
+
+        public Marca toEntidad() {
+                Marca marca = new Marca();
+                marca.setNombre(this.nombre());
+                return marca;
+        }
 }

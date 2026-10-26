@@ -1,5 +1,7 @@
 package com.descansobygi.dto.imagen;
 
+import com.descansobygi.model.Imagen;
+import com.descansobygi.model.Producto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -17,4 +19,11 @@ public record ImagenRequestDTO(
         @NotNull(message = "El id del producto es obligatorio")
         Long productoId
 ) {
+
+        public Imagen toEntidad(Producto producto) {
+                Imagen imagen = new Imagen();
+                imagen.setUrl(this.url());
+                imagen.setProducto(producto);
+                return imagen;
+        }
 }

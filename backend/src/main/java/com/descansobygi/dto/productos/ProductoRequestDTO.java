@@ -1,4 +1,7 @@
 package com.descansobygi.dto.productos;
+import com.descansobygi.model.Categoria;
+import com.descansobygi.model.Marca;
+import com.descansobygi.model.Producto;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
@@ -33,4 +36,15 @@ public record ProductoRequestDTO(
         @NotNull(message = "La categoria es obligatoria")
         Long categoriaId
 ) {
+
+        public Producto toEntidad(Marca marca, Categoria categoria) {
+                Producto producto = new Producto();
+                producto.setNombre(this.nombre());
+                producto.setDescripcion(this.descripcion());
+                producto.setPrecio(this.precio());
+                producto.setStock(this.stock());
+                producto.setMarca(marca);
+                producto.setCategoria(categoria);
+                return producto;
+        }
 }
