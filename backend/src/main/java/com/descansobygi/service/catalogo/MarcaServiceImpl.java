@@ -5,11 +5,12 @@ import com.descansobygi.dto.marca.MarcaResponseDTO;
 import com.descansobygi.model.Marca;
 import com.descansobygi.repository.catalogo.MarcaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Service
 public class MarcaServiceImpl implements IMarcaService {
     @Autowired
     private MarcaRepository marcaRepository;

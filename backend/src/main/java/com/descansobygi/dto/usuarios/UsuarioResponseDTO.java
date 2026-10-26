@@ -10,8 +10,8 @@ public record UsuarioResponseDTO(
     String nombre,
     String apellido,
     String mail,
-    String celular,
-    Rol rol
+    String celular
+
 ) {
     public static UsuarioResponseDTO fromEntidad(Usuario usuario) {
         return new UsuarioResponseDTO(
@@ -19,8 +19,7 @@ public record UsuarioResponseDTO(
                 usuario.getNombre(),
                 usuario.getApellido(),
                 usuario.getMail(),
-                usuario.getCelular(),
-                usuario.getRol()
+                usuario.getCelular()
         );
     }
 }

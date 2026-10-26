@@ -3,14 +3,17 @@ package com.descansobygi.service.usuarios;
 import com.descansobygi.dto.usuarios.UsuarioRequestDTO;
 import com.descansobygi.dto.usuarios.UsuarioResponseDTO;
 import com.descansobygi.enums.EstadoCarrito;
+import com.descansobygi.exception.ResourceNotFoundException;
 import com.descansobygi.model.Carrito;
 import com.descansobygi.model.Usuario;
 import com.descansobygi.repository.carrito.CarritoRepository;
 import com.descansobygi.repository.usuarios.UsuarioRepository;
 import com.descansobygi.service.carrito.ICarritoService;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@Service
 public class UsuarioServiceImpl implements IUsuarioService{
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -45,7 +48,7 @@ public class UsuarioServiceImpl implements IUsuarioService{
     public UsuarioResponseDTO obtenerPorId(Long id) {
         // Buscar usuario
         Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
         // Retornar DTO
         return UsuarioResponseDTO.fromEntidad(usuario);
     }
@@ -54,7 +57,7 @@ public class UsuarioServiceImpl implements IUsuarioService{
     public UsuarioResponseDTO modificar(Long id, UsuarioRequestDTO dto) {
         // Buscar usuario
         Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
         // Validar email si cambió
         if (!usuario.getMail().equals(dto.mail())) {
@@ -79,7 +82,7 @@ public class UsuarioServiceImpl implements IUsuarioService{
     @Override
     public UsuarioResponseDTO buscarPorMail(String mail) {
         Usuario usuario = usuarioRepository.findByMailActivo(mail)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
         return UsuarioResponseDTO.fromEntidad(usuario);
     }
@@ -88,7 +91,7 @@ public class UsuarioServiceImpl implements IUsuarioService{
     @Override
     public UsuarioResponseDTO eliminarUsuario(Long id) {
         Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
         // Marcar como eliminado (borrado lógico)
         usuario.setEliminado(true);

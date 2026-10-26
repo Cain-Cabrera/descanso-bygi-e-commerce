@@ -10,12 +10,14 @@ import com.descansobygi.repository.pedidos.DetallePedidoRepository;
 import com.descansobygi.repository.pedidos.PedidoRepository;
 import com.descansobygi.repository.usuarios.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class PedidoServiceImpl implements IPedidoService{
     @Autowired
     private PedidoRepository pedidoRepository;
@@ -111,7 +113,6 @@ public class PedidoServiceImpl implements IPedidoService{
             producto.setStock(producto.getStock() + detalle.getCantidad());
             productoRepository.save(producto);
         }
-
 
         // Marcar como eliminado
         pedido.setEliminado(true);

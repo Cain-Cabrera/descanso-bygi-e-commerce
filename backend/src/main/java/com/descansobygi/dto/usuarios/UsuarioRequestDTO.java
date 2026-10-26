@@ -32,11 +32,8 @@ public record UsuarioRequestDTO (
 
     // celular opcional, pero tiene un maximo de 20 caracteres
     @Size(max = 30, message = "El celular no puede superar los 20 caracteres")
-    String celular,
+    String celular
 
-    // el rol debe ser uno de los valores dinificos en la enumeracion
-    @NotNull(message = "Rol oblogatorio")
-    Rol rol
 
 ) {
 
@@ -48,7 +45,7 @@ public record UsuarioRequestDTO (
         usuario.setMail(this.mail());
         usuario.setContrasena(this.contrasena());
         usuario.setCelular(this.celular());
-        usuario.setRol(this.rol());
+        usuario.setRol(Rol.USUARIO);
         return usuario;
     }
 }
