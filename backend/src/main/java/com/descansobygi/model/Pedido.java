@@ -38,4 +38,10 @@ public class Pedido extends Base {
 
     @OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY)
     private Set<DetallePedido> detalles = new HashSet<>();
+
+    public void calcularTotal() {
+        this.total = this.detalles.stream()
+                .map(DetallePedido::getSubtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }

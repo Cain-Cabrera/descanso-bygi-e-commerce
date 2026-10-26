@@ -45,4 +45,11 @@ public class DetallePedido extends Base {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
+
+    public void calcularSubtotal() {
+        if (this.producto != null && this.cantidad != null) {
+            this.subtotal = this.producto.getPrecio()
+                    .multiply(new BigDecimal(this.cantidad));
+        }
+    }
 }

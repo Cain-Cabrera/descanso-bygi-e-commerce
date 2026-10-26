@@ -5,11 +5,14 @@ package com.descansobygi.repository.catalogo;
 import com.descansobygi.model.Categoria;
 
 // JpaRepository proporciona las operaciones de persistencia habituales.
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 // Este repositorio permite interactuar con la tabla categorias.
 // Categoria es la entidad administrada y Long es el tipo de su identificador.
 public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
+    boolean existsByNombre(String nombre);
 
     // No necesitamos implementar los métodos CRUD básicos.
     // Spring Data JPA los proporciona automáticamente:

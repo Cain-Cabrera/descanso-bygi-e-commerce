@@ -23,7 +23,7 @@ public class ProductoServiceImpl implements IProductoService{
     private MarcaRepository marcaRepository;
 
     @Autowired
-    private CategoriaRepository categoriaRepository
+    private CategoriaRepository categoriaRepository;
 
     @Transactional
     @Override
@@ -92,7 +92,7 @@ public class ProductoServiceImpl implements IProductoService{
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public ProductoResponseDTO modificar(Long id, ProductoRequestDTO dto) {
         Producto producto = productoRepository.findById(id)
