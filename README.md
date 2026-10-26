@@ -68,7 +68,7 @@ Toda la documentación técnica del proyecto se encuentra centralizada en la car
 La carpeta [`docs/Diagramas/`](./docs/Diagramas/) contiene los principales diagramas utilizados durante el análisis y diseño del proyecto:
 
 - [ER_PostgreSQL_Descanso_by_Gi.png]
-- [Diagrama UML]
+- [UML-Descanso-by.png]
 
 Los diagramas permiten visualizar la estructura de la base de datos y el diseño de las principales entidades y relaciones del sistema.
 
