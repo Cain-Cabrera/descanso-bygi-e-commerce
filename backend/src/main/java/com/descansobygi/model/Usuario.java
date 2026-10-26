@@ -2,16 +2,12 @@
 package com.descansobygi.model;
 
 import com.descansobygi.enums.Rol;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 // Representa a un usuario registrado en la aplicación.
 @Entity
@@ -20,6 +16,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"mail"},callSuper = false)
 public class Usuario extends Base {
 
     // Nombre del usuario.
@@ -46,4 +43,10 @@ public class Usuario extends Base {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private Rol rol;
+
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+    private Set<Carrito> carritos = new HashSet<>();
+
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+    private Set<Pedido> pedidos = new HashSet<>();
 }

@@ -1,17 +1,12 @@
 
 package com.descansobygi.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 // Representa un producto del catálogo de Descanso by Gi.
 @Entity
@@ -20,6 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"id"},callSuper = false)
 public class Producto extends Base {
 
     // Nombre del producto; es obligatorio.
@@ -47,4 +43,13 @@ public class Producto extends Base {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
+
+    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
+    private Set<Imagen> imagenes = new HashSet<>();
+
+    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
+    private Set<ItemCarrito> itemsCarrito = new HashSet<>();
+
+    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
+    private Set<DetallePedido> detalles = new HashSet<>();
 }

@@ -1,14 +1,12 @@
 
 package com.descansobygi.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 // Indica que la clase representa una entidad persistente.
 @Entity
@@ -23,6 +21,8 @@ import lombok.AllArgsConstructor;
 // Constructor vacío requerido por JPA.
 @NoArgsConstructor
 
+// Comparar por nombre
+@EqualsAndHashCode(of = {"nombre"}, callSuper = false)
 // Constructor con los atributos propios de Categoria: nombre y descripcion.
 @AllArgsConstructor
 public class Categoria extends Base {
@@ -35,6 +35,8 @@ public class Categoria extends Base {
     @Column(length = 255)
     private String descripcion;
 
+    @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY)
+    private Set<Producto> productos = new HashSet<>();
     // No necesitamos escribir manualmente los getters y setters:
     // Lombok los genera durante la compilación.
 }

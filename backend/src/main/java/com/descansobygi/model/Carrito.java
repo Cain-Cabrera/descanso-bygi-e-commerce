@@ -2,19 +2,15 @@
 package com.descansobygi.model;
 
 import com.descansobygi.enums.EstadoCarrito;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 // Representa el carrito de compras de un usuario.
 @Entity
@@ -34,4 +30,7 @@ public class Carrito extends Base {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
+
+    @OneToMany(mappedBy = "carrito", fetch = FetchType.LAZY)
+    private Set<ItemCarrito> items = new HashSet<>();
 }
