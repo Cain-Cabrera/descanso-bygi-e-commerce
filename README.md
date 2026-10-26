@@ -67,8 +67,8 @@ Toda la documentación técnica del proyecto se encuentra centralizada en la car
 
 La carpeta [`docs/Diagramas/`](./docs/Diagramas/) contiene los principales diagramas utilizados durante el análisis y diseño del proyecto:
 
-- [Diagrama ERR - Base de datos](./docs/Diagramas/Diagrama%20ERR-Base%20de%20datos.jpeg)
-- [Diagrama UML](./docs/Diagramas/UML.png)
+- [Diagrama ERR - Base de datos]
+- [Diagrama UML]
 
 Los diagramas permiten visualizar la estructura de la base de datos y el diseño de las principales entidades y relaciones del sistema.
 
