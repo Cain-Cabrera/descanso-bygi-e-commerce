@@ -1,5 +1,5 @@
 
-package com.descansobygi.repository;
+package com.descansobygi.repository.shared;
 
 import com.descansobygi.model.Imagen;
 import org.springframework.data.jpa.repository.JpaRepository;

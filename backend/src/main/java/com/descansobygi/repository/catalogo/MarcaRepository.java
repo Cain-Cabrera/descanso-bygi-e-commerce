@@ -1,5 +1,5 @@
 
-package com.descansobygi.repository;
+package com.descansobygi.repository.catalogo;
 
 import com.descansobygi.model.Marca;
 import org.springframework.data.jpa.repository.JpaRepository;

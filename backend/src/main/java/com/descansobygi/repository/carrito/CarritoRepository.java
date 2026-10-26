@@ -1,5 +1,5 @@
 
-package com.descansobygi.repository;
+package com.descansobygi.repository.carrito;
 
 import com.descansobygi.model.Carrito;
 import org.springframework.data.jpa.repository.JpaRepository;

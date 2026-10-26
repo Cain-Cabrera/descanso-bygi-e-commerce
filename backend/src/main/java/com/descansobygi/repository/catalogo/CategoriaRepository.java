@@ -1,5 +1,5 @@
 
-package com.descansobygi.repository;
+package com.descansobygi.repository.catalogo;
 
 // Importamos la entidad sobre la que trabajará el repositorio.
 import com.descansobygi.model.Categoria;

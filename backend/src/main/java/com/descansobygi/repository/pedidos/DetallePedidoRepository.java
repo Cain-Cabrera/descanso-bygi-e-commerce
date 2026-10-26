@@ -1,5 +1,5 @@
 
-package com.descansobygi.repository;
+package com.descansobygi.repository.pedidos;
 
 import com.descansobygi.model.DetallePedido;
 import org.springframework.data.jpa.repository.JpaRepository;
