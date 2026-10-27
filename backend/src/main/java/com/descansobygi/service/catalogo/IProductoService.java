@@ -1,5 +1,6 @@
 package com.descansobygi.service.catalogo;
 
+import com.descansobygi.dto.productos.ProductoEditDTO;
 import com.descansobygi.dto.productos.ProductoRequestDTO;
 import com.descansobygi.dto.productos.ProductoResponseDTO;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,7 @@ public interface IProductoService {
     List<ProductoResponseDTO> filtrarPorMarca(Long marcaId);
 
     @Transactional
-    ProductoResponseDTO modificar(Long id, ProductoRequestDTO dto);
+    ProductoResponseDTO modificar(Long id, ProductoEditDTO dto);
 
     @Transactional
     ProductoResponseDTO eliminar(Long id);

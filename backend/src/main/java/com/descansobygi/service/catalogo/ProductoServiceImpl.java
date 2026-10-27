@@ -1,8 +1,11 @@
 package com.descansobygi.service.catalogo;
 
+import com.descansobygi.dto.productos.ProductoEditDTO;
 import com.descansobygi.dto.productos.ProductoRequestDTO;
 import com.descansobygi.dto.productos.ProductoResponseDTO;
+import com.descansobygi.exception.ResourceNotFoundException;
 import com.descansobygi.model.Categoria;
+import com.descansobygi.model.Imagen;
 import com.descansobygi.model.Marca;
 import com.descansobygi.model.Producto;
 import com.descansobygi.repository.catalogo.CategoriaRepository;
@@ -96,23 +99,34 @@ public class ProductoServiceImpl implements IProductoService{
 
     @Transactional
     @Override
-    public ProductoResponseDTO modificar(Long id, ProductoRequestDTO dto) {
+    public ProductoResponseDTO modificar(Long id, ProductoEditDTO dto) {
         Producto producto = productoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));
 
-        Marca marca = obtenerMarcaOThrow(dto.marcaId());
-        Categoria categoria = obtenerCategoriaOThrow(dto.categoriaId());
+        if (dto.nombre() != null)      producto.setNombre(dto.nombre());
+        if (dto.descripcion() != null) producto.setDescripcion(dto.descripcion());
+        if (dto.precio() != null)      producto.setPrecio(dto.precio());
+        if (dto.stock() != null)       producto.setStock(dto.stock());
 
-        producto.setNombre(dto.nombre());
-        producto.setDescripcion(dto.descripcion());
-        producto.setPrecio(dto.precio());
-        producto.setStock(dto.stock());
-        producto.setMarca(marca);
-        producto.setCategoria(categoria);
+        if (dto.marcaId() != null) {
+            producto.setMarca(obtenerMarcaOThrow(dto.marcaId()));
+        }
+        if (dto.categoriaId() != null) {
+            producto.setCategoria(obtenerCategoriaOThrow(dto.categoriaId()));
+        }
 
-        Producto productoActualizado = productoRepository.save(producto);
+        // Si llegó la lista de imágenes, reemplaza las anteriores
+        if (dto.imagenes() != null) {
+            producto.getImagenes().clear();
+            for (String url : dto.imagenes()) {
+                Imagen imagen = new Imagen();
+                imagen.setUrl(url);
+                imagen.setProducto(producto);
+                producto.getImagenes().add(imagen);
+            }
+        }
 
-        return ProductoResponseDTO.fromEntidad(productoActualizado);
+        return ProductoResponseDTO.fromEntidad(productoRepository.save(producto));
     }
 
     @Transactional

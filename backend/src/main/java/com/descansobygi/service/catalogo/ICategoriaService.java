@@ -1,5 +1,6 @@
 package com.descansobygi.service.catalogo;
 
+import com.descansobygi.dto.categorias.CategoriaEditDTO;
 import com.descansobygi.dto.categorias.CategoriaRequestDTO;
 import com.descansobygi.dto.categorias.CategoriaResponseDTO;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,7 @@ public interface ICategoriaService {
     List<CategoriaResponseDTO> listar();
 
     @Transactional
-    CategoriaResponseDTO modificar(Long id, CategoriaRequestDTO dto);
+    CategoriaResponseDTO modificar(Long id, CategoriaEditDTO dto);
 
     @Transactional
     CategoriaResponseDTO eliminar(Long id);

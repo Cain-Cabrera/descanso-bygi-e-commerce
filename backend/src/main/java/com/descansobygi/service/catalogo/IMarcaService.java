@@ -1,5 +1,6 @@
 package com.descansobygi.service.catalogo;
 
+import com.descansobygi.dto.marca.MarcaEditDTO;
 import com.descansobygi.dto.marca.MarcaRequestDTO;
 import com.descansobygi.dto.marca.MarcaResponseDTO;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,7 @@ public interface IMarcaService {
     List<MarcaResponseDTO> listar();
 
     @Transactional
-    MarcaResponseDTO modificar(Long id, MarcaRequestDTO dto);
+    MarcaResponseDTO modificar(Long id, MarcaEditDTO dto);
 
     @Transactional
     MarcaResponseDTO eliminar(Long id);

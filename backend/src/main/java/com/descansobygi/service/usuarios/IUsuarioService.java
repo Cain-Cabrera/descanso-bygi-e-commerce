@@ -1,5 +1,6 @@
 package com.descansobygi.service.usuarios;
 
+import com.descansobygi.dto.usuarios.UsuarioEditDTO;
 import com.descansobygi.dto.usuarios.UsuarioRequestDTO;
 import com.descansobygi.dto.usuarios.UsuarioResponseDTO;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +13,7 @@ public interface IUsuarioService {
     UsuarioResponseDTO obtenerPorId(Long id);
 
     @Transactional
-    UsuarioResponseDTO modificar(Long id, UsuarioRequestDTO dto);
+    UsuarioResponseDTO modificar(Long id, UsuarioEditDTO dto);
 
     @Transactional(readOnly = true)
     UsuarioResponseDTO buscarPorMail(String mail);

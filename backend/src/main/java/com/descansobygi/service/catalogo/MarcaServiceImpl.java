@@ -1,7 +1,10 @@
 package com.descansobygi.service.catalogo;
 
+import com.descansobygi.dto.marca.MarcaEditDTO;
 import com.descansobygi.dto.marca.MarcaRequestDTO;
 import com.descansobygi.dto.marca.MarcaResponseDTO;
+import com.descansobygi.exception.BadRequestException;
+import com.descansobygi.exception.ResourceNotFoundException;
 import com.descansobygi.model.Marca;
 import com.descansobygi.repository.catalogo.MarcaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,13 +49,20 @@ public class MarcaServiceImpl implements IMarcaService {
 
     @Transactional
     @Override
-    public MarcaResponseDTO modificar(Long id, MarcaRequestDTO dto) {
+    public MarcaResponseDTO modificar(Long id, MarcaEditDTO dto) {
         Marca marca = marcaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Marca no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Marca no encontrada"));
 
-        marca.setNombre(dto.nombre());
-        Marca marcaActualizada = marcaRepository.save(marca);
-        return MarcaResponseDTO.fromEntidad(marcaActualizada);
+        if (dto.nombre() != null && !dto.nombre().equals(marca.getNombre())
+                && marcaRepository.existsByNombre(dto.nombre())) {
+            throw new BadRequestException("Ya existe una marca con ese nombre");
+        }
+
+        if (dto.nombre() != null) {
+            marca.setNombre(dto.nombre());
+        }
+
+        return MarcaResponseDTO.fromEntidad(marcaRepository.save(marca));
     }
 
     @Transactional

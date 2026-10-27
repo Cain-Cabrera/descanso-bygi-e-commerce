@@ -1,7 +1,10 @@
 package com.descansobygi.service.catalogo;
 
+import com.descansobygi.dto.categorias.CategoriaEditDTO;
 import com.descansobygi.dto.categorias.CategoriaRequestDTO;
 import com.descansobygi.dto.categorias.CategoriaResponseDTO;
+import com.descansobygi.exception.BadRequestException;
+import com.descansobygi.exception.ResourceNotFoundException;
 import com.descansobygi.model.Categoria;
 import com.descansobygi.repository.catalogo.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,15 +49,17 @@ public class CategoriaServiceImpl implements ICategoriaService{
     }
     @Transactional
     @Override
-    public CategoriaResponseDTO modificar(Long id, CategoriaRequestDTO dto) {
+    public CategoriaResponseDTO modificar(Long id, CategoriaEditDTO dto) {
         Categoria categoria = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada"));
 
-        categoria.setNombre(dto.nombre());
-        categoria.setDescripcion(dto.descripcion());
+        if (dto.nombre() != null && !dto.nombre().equals(categoria.getNombre())
+                && categoriaRepository.existsByNombre(dto.nombre())) {
+            throw new BadRequestException("Ya existe una categoría con ese nombre");
+        }
 
-        Categoria categoriaActualizada = categoriaRepository.save(categoria);
-        return CategoriaResponseDTO.fromEntidad(categoriaActualizada);
+        dto.aplicarA(categoria);
+        return CategoriaResponseDTO.fromEntidad(categoriaRepository.save(categoria));
     }
 
     @Transactional

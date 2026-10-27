@@ -1,5 +1,6 @@
 package com.descansobygi.service.usuarios;
 
+import com.descansobygi.dto.usuarios.UsuarioEditDTO;
 import com.descansobygi.dto.usuarios.UsuarioRequestDTO;
 import com.descansobygi.dto.usuarios.UsuarioResponseDTO;
 import com.descansobygi.enums.EstadoCarrito;
@@ -54,26 +55,22 @@ public class UsuarioServiceImpl implements IUsuarioService{
     }
     @Transactional
     @Override
-    public UsuarioResponseDTO modificar(Long id, UsuarioRequestDTO dto) {
+    public UsuarioResponseDTO modificar(Long id, UsuarioEditDTO dto) {
         // Buscar usuario
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
-        // Validar email si cambió
-        if (!usuario.getMail().equals(dto.mail())) {
+        // Validar email solo si viene y cambió
+        if (dto.mail() != null && !dto.mail().equals(usuario.getMail())) {
             validarEmailNoExista(dto.mail());
+            usuario.setMail(dto.mail());
         }
 
-        // Actualizar
-        usuario.setNombre(dto.nombre());
-        usuario.setApellido(dto.apellido());
-        usuario.setMail(dto.mail());
-        usuario.setCelular(dto.celular());
+        if (dto.nombre() != null)   usuario.setNombre(dto.nombre());
+        if (dto.apellido() != null) usuario.setApellido(dto.apellido());
+        if (dto.celular() != null)  usuario.setCelular(dto.celular());
 
-        // Guardar
         Usuario usuarioActualizado = usuarioRepository.save(usuario);
-
-        // Retornar DTO
         return UsuarioResponseDTO.fromEntidad(usuarioActualizado);
     }
 

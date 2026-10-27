@@ -44,7 +44,7 @@ public class Producto extends Base {
     @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
 
-    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Imagen> imagenes = new HashSet<>();
 
     @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
