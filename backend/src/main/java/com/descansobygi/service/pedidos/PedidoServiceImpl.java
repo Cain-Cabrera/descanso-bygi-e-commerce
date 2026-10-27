@@ -118,4 +118,12 @@ public class PedidoServiceImpl implements IPedidoService{
         pedido.setEliminado(true);
         return PedidoResponseDTO.fromEntidad(pedidoRepository.save(pedido));
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<PedidoResponseDTO> listarTodos() {
+        return pedidoRepository.findAll().stream()
+                .map(PedidoResponseDTO::fromEntidad)
+                .collect(Collectors.toList());
+    }
 }

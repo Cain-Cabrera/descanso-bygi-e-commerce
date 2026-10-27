@@ -19,4 +19,7 @@ public interface IPedidoService {
 
     @Transactional
     PedidoResponseDTO cancelarPedido(Long id);
+
+    @Transactional(readOnly = true)
+    List<PedidoResponseDTO> listarTodos();
 }

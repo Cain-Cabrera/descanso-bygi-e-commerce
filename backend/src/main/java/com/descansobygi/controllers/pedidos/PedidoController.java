@@ -4,7 +4,7 @@ import com.descansobygi.dto.pedido.PedidoRequestDTO;
 import com.descansobygi.dto.pedido.PedidoResponseDTO;
 import com.descansobygi.service.pedidos.IPedidoService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,6 +35,7 @@ public class PedidoController {
         PedidoResponseDTO respuesta = pedidoService.crearPedido(usuarioId, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
     }
+
     @GetMapping("/usuario/{usuarioId}")
     @Operation(summary = "Pedidos por usuario", description = "Lista los pedidos de un usuario")
     @ApiResponses({
@@ -64,6 +65,20 @@ public class PedidoController {
     public ResponseEntity<Void> cancelarPedido(@PathVariable("id") Long id) {
         pedidoService.cancelarPedido(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Lista todos los pedidos registrados.
+    @GetMapping
+    @Operation(
+            summary = "Listar todos los pedidos",
+            description = "Obtiene todos los pedidos registrados"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Pedidos encontrados"
+    )
+    public ResponseEntity<List<PedidoResponseDTO>> listarTodos() {
+        return ResponseEntity.ok(pedidoService.listarTodos());
     }
 
 }

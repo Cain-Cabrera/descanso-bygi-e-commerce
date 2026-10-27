@@ -9,5 +9,4 @@ public class DescansobygiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DescansobygiApplication.class, args);
 	}
-
 }
