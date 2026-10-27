@@ -4,6 +4,8 @@ import com.descansobygi.dto.carrito.CarritoResponseDTO;
 import com.descansobygi.dto.itemCarrito.ItemCarritoRequestDTO;
 import com.descansobygi.dto.itemCarrito.ItemCarritoResponseDTO;
 import com.descansobygi.enums.EstadoCarrito;
+import com.descansobygi.exception.BadRequestException;
+import com.descansobygi.exception.ResourceNotFoundException;
 import com.descansobygi.model.Carrito;
 import com.descansobygi.model.ItemCarrito;
 import com.descansobygi.model.Producto;
@@ -28,78 +30,78 @@ public class CarritoServiceImpl  implements ICarritoService{
     @Autowired
     private ProductoRepository productoRepository;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-
     @Transactional(readOnly = true)
     @Override
     public CarritoResponseDTO obtenerCarritoActivo(Long usuarioId) {
-        Usuario usuario = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        Carrito carrito = carritoRepository.findByUsuarioIdAndEstado(usuarioId, EstadoCarrito.ACTIVO)
-                .orElseThrow(() -> new RuntimeException("Carrito activo no encontrado"));
-
+        Carrito carrito = obtenerCarritoActivoOThrow(usuarioId);
         return CarritoResponseDTO.fromEntidad(carrito);
     }
 
     @Transactional
     @Override
-    public ItemCarritoResponseDTO agregarAlCarrito(ItemCarritoRequestDTO dto) {
-        Carrito carrito = carritoRepository.findById(dto.carritoId())
-                .orElseThrow(() -> new RuntimeException("Carrito no encontrado"));
+    public ItemCarritoResponseDTO agregarAlCarrito(Long usuarioId, ItemCarritoRequestDTO dto) {
+        Carrito carrito = obtenerCarritoActivoOThrow(usuarioId);
 
         Producto producto = productoRepository.findById(dto.productoId())
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));
 
-        // Validar stock
         if (producto.getStock() < dto.cantidad()) {
-            throw new RuntimeException("Stock insuficiente");
+            throw new BadRequestException("Stock insuficiente");
         }
 
         ItemCarrito item = dto.toEntidad(carrito, producto);
-        ItemCarrito itemGuardado = itemCarritoRepository.save(item);
-
-        return ItemCarritoResponseDTO.fromEntidad(itemGuardado);
+        return ItemCarritoResponseDTO.fromEntidad(itemCarritoRepository.save(item));
     }
 
-
+    @Transactional
     @Override
-    public ItemCarritoResponseDTO modificarCantidad(Long itemId, Integer nuevaCantidad) {
-        ItemCarrito item = itemCarritoRepository.findById(itemId)
-                .orElseThrow(() -> new RuntimeException("Item no encontrado"));
+    public ItemCarritoResponseDTO modificarCantidad(Long usuarioId, Long itemId, Integer nuevaCantidad) {
+        ItemCarrito item = obtenerItemDelUsuarioOThrow(usuarioId, itemId);
 
-        // Validar cantidad
         if (nuevaCantidad <= 0) {
-            throw new RuntimeException("Cantidad debe ser mayor a 0");
+            throw new BadRequestException("La cantidad debe ser mayor a 0");
         }
 
-        // Validar stock
         if (item.getProducto().getStock() < nuevaCantidad) {
-            throw new RuntimeException("Stock insuficiente");
+            throw new BadRequestException("Stock insuficiente");
         }
 
         item.setCantidad(nuevaCantidad);
         item.setSubtotal(item.getProducto().getPrecio().multiply(new BigDecimal(nuevaCantidad)));
 
-        ItemCarrito itemActualizado = itemCarritoRepository.save(item);
-        return ItemCarritoResponseDTO.fromEntidad(itemActualizado);
+        return ItemCarritoResponseDTO.fromEntidad(itemCarritoRepository.save(item));
     }
 
+    @Transactional
     @Override
-    public void eliminarDelCarrito(Long itemId) {
-        ItemCarrito item = itemCarritoRepository.findById(itemId)
-                .orElseThrow(() -> new RuntimeException("Item no encontrado"));
-
+    public void eliminarDelCarrito(Long usuarioId, Long itemId) {
+        ItemCarrito item = obtenerItemDelUsuarioOThrow(usuarioId, itemId);
         itemCarritoRepository.delete(item);
     }
 
+    @Transactional
     @Override
-    public void vaciarCarrito(Long carritoId) {
-        Carrito carrito = carritoRepository.findById(carritoId)
-                .orElseThrow(() -> new RuntimeException("Carrito no encontrado"));
-
+    public void vaciarCarrito(Long usuarioId) {
+        Carrito carrito = obtenerCarritoActivoOThrow(usuarioId);
         carrito.getItems().clear();
         carritoRepository.save(carrito);
+    }
+
+    // --- Métodos privados ---
+
+    private Carrito obtenerCarritoActivoOThrow(Long usuarioId) {
+        return carritoRepository.findByUsuarioIdAndEstado(usuarioId, EstadoCarrito.ACTIVO)
+                .orElseThrow(() -> new ResourceNotFoundException("Carrito activo no encontrado"));
+    }
+
+    private ItemCarrito obtenerItemDelUsuarioOThrow(Long usuarioId, Long itemId) {
+        ItemCarrito item = itemCarritoRepository.findById(itemId)
+                .orElseThrow(() -> new ResourceNotFoundException("Item no encontrado"));
+
+        // Verifica que el item pertenezca al carrito activo del usuario
+        if (!item.getCarrito().getUsuario().getId().equals(usuarioId)) {
+            throw new ResourceNotFoundException("Item no encontrado");
+        }
+        return item;
     }
 }

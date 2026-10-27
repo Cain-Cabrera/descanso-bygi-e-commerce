@@ -6,18 +6,19 @@ import com.descansobygi.dto.itemCarrito.ItemCarritoResponseDTO;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface ICarritoService {
+
     @Transactional(readOnly = true)
     CarritoResponseDTO obtenerCarritoActivo(Long usuarioId);
 
     @Transactional
-    ItemCarritoResponseDTO agregarAlCarrito(ItemCarritoRequestDTO dto);
+    ItemCarritoResponseDTO agregarAlCarrito(Long usuarioId, ItemCarritoRequestDTO dto);
 
     @Transactional
-    ItemCarritoResponseDTO modificarCantidad(Long itemId, Integer nuevaCantidad);
+    ItemCarritoResponseDTO modificarCantidad(Long usuarioId, Long itemId, Integer nuevaCantidad);
 
     @Transactional
-    void eliminarDelCarrito(Long itemId);
+    void eliminarDelCarrito(Long usuarioId, Long itemId);
 
     @Transactional
-    void vaciarCarrito(Long carritoId);
+    void vaciarCarrito(Long usuarioId);
 }
