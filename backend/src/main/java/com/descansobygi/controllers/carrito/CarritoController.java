@@ -1,4 +1,4 @@
-package com.descansobygi.controllers;
+package com.descansobygi.controllers.carrito;
 
 import com.descansobygi.dto.carrito.CarritoResponseDTO;
 import com.descansobygi.dto.itemCarrito.ItemCarritoRequestDTO;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/carrito")
 @Tag(name = "Carrito", description = "Gestión del carrito de compras de cada usuario")
-public class carrito {
+public class CarritoController {
     @Autowired
     private ICarritoService carritoService;
 
