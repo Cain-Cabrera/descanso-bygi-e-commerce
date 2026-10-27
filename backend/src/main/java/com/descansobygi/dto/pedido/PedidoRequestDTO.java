@@ -3,6 +3,7 @@ package com.descansobygi.dto.pedido;
 import com.descansobygi.enums.FormaDePago;
 import com.descansobygi.model.Pedido;
 import com.descansobygi.model.Usuario;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 public record PedidoRequestDTO(
 
         @NotNull(message = "La forma de pago es obligatorio")
+        @JsonProperty("formaDePago")
         FormaDePago formaDePago
 ) {
         public Pedido toEntidad(Usuario usuario, BigDecimal total) {

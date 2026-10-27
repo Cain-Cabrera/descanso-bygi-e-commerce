@@ -5,12 +5,16 @@ import com.descansobygi.dto.usuarios.UsuarioRequestDTO;
 import com.descansobygi.dto.usuarios.UsuarioResponseDTO;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface IUsuarioService {
     @Transactional
     UsuarioResponseDTO registrar(UsuarioRequestDTO usuarioRequestDTO);
 
     @Transactional(readOnly = true)
     UsuarioResponseDTO obtenerPorId(Long id);
+    @Transactional(readOnly = true)
+    List<UsuarioResponseDTO> listar();
 
     @Transactional
     UsuarioResponseDTO modificar(Long id, UsuarioEditDTO dto);

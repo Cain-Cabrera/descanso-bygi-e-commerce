@@ -15,10 +15,11 @@ import com.descansobygi.repository.carrito.ItemCarritoRepository;
 import com.descansobygi.repository.catalogo.ProductoRepository;
 import com.descansobygi.repository.usuarios.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-
+@Service
 public class CarritoServiceImpl  implements ICarritoService{
 
     @Autowired

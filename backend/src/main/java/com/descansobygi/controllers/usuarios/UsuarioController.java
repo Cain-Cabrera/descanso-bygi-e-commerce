@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -47,6 +49,25 @@ public class UsuarioController {
     public ResponseEntity<UsuarioResponseDTO> obtenerPorId(@PathVariable Long id) {
         UsuarioResponseDTO respuesta = usuarioService.obtenerPorId(id);
         return ResponseEntity.ok(respuesta);
+    }
+
+    @GetMapping("/buscar")
+    @Operation(summary = "Buscar usuario por mail", description = "Obtiene un usuario por su correo electrónico")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Usuario encontrado"),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+    })
+    public ResponseEntity<UsuarioResponseDTO> buscarPorMail(@RequestParam("mail") String mail) {
+        return ResponseEntity.ok(usuarioService.buscarPorMail(mail));
+    }
+
+    @GetMapping
+    @Operation(summary = "Listar usuarios", description = "Devuelve los usuarios activos")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Usuarios encontrados")
+    })
+    public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios() {
+        return ResponseEntity.ok(usuarioService.listar());
     }
 
     @PatchMapping("/{id}")
