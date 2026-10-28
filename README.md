@@ -23,6 +23,7 @@
 - [Alcance](#-alcance)
 - [Stack tecnológico](#-stack-tecnológico)
 - [Estructura del repositorio](#-estructura-del-repositorio)
+- [Módulos funcionales](#-módulos-funcionales)
 - [Módulo backend](#-módulo-backend)
 - [Módulo frontend](#-módulo-frontend)
 - [Cómo empezar](#-cómo-empezar)
@@ -154,6 +155,20 @@ descanso-by-gi/
 │   └── requisitos.md                          # Requisitos del sistema
 └── README.md
 ```
+
+---
+
+## 🧩 Módulos funcionales
+
+El sistema se organiza en los siguientes módulos, definidos a partir de los [requisitos funcionales](./docs/requisitos.md):
+
+| Módulo | Descripción | Requisitos |
+|---|---|---|
+| 👤 **Usuarios** | Registro, inicio de sesión y gestión de la cuenta (consulta y modificación de datos personales). | RF01 – RF03 |
+| 🛒 **Catálogo** | Consulta de productos, agrupación por categorías, búsqueda, filtros y detalle de producto con imágenes. | RF04 – RF08 |
+| 🧺 **Carrito** | Consulta del carrito, agregar productos con cantidad, modificar cantidades y eliminar productos. | RF09 – RF12 |
+| 📦 **Pedidos** | Confirmación del carrito como pedido y consulta del historial y detalle de pedidos del cliente. | RF13 – RF15 |
+| ⚙️ **Administración** | Gestión de productos, categorías, marcas, imágenes, stock, pedidos y usuarios. Acceso restringido por rol (RNF06). | RF16 – RF22 |
 
 ---
 
