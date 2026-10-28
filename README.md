@@ -146,9 +146,12 @@ descanso-by-gi/
 │   ├── package.json
 │   └── README.md
 ├── docs/                    # Documentación técnica
-│   ├── arquitectura.md
-│   ├── api.md
-│   └── db.md
+│   ├── Diagramas/
+│   │   ├── ER_PostgreSQL_Descanso_by_Gi.png   # Diagrama entidad-relación
+│   │   └── UML-Descanso-by.png                # Diagrama UML del sistema
+│   ├── diccionario-datos.md                   # Diccionario de datos
+│   ├── reglas-negocio.md                      # Reglas de negocio
+│   └── requisitos.md                          # Requisitos del sistema
 └── README.md
 ```
 
