@@ -13,6 +13,7 @@ import com.descansobygi.service.carrito.ICarritoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -22,6 +23,8 @@ public class UsuarioServiceImpl implements IUsuarioService{
     private UsuarioRepository usuarioRepository;
     @Autowired
     private CarritoRepository carritoRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Transactional
     @Override
@@ -31,6 +34,9 @@ public class UsuarioServiceImpl implements IUsuarioService{
 
         // Convertimos DTO a entidad
         Usuario usuario = usuarioRequestDTO.toEntidad();
+
+        // Guardamos la contraseña cifrada con BCrypt, nunca en texto plano
+        usuario.setContrasena(passwordEncoder.encode(usuarioRequestDTO.contrasena()));
 
         // Guradamos en la base de datos
         Usuario usuarioGuardado  = usuarioRepository.save(usuario);

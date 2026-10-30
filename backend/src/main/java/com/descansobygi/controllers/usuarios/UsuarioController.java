@@ -3,14 +3,13 @@ package com.descansobygi.controllers.usuarios;
 import com.descansobygi.dto.usuarios.UsuarioEditDTO;
 import com.descansobygi.dto.usuarios.UsuarioRequestDTO;
 import com.descansobygi.dto.usuarios.UsuarioResponseDTO;
-import com.descansobygi.repository.usuarios.UsuarioRepository;
 import com.descansobygi.service.usuarios.IUsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +28,8 @@ public class UsuarioController {
 
     // Crear un usuario
     @PostMapping("/registrar")
+    // Endpoint público: en Swagger no muestra el candado.
+    @SecurityRequirements
     @Operation(summary = "Registrar usuario", description = "Crea un nuevo usuario")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Usuario creado"),
