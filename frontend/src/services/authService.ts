@@ -1,18 +1,8 @@
 
-import axios from 'axios'
+import api from './api'
 import type { LoginRequest, LoginResponse } from '../types/auth'
 
-const API_URL = import.meta.env.VITE_API_URL
-
-// Configuración de Axios para comunicarnos con Spring Boot.
-const api = axios.create({
-    baseURL: API_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
-})
-
-// Envía las credenciales y devuelve los datos del usuario autenticado.
+// Envía las credenciales al backend y devuelve la respuesta.
 export const iniciarSesion = async (
     datos: LoginRequest
 ): Promise<LoginResponse> => {

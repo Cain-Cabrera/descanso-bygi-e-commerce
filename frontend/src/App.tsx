@@ -3,23 +3,29 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 import Registro from './pages/Registro'
 import Login from './pages/Login'
+import Home from './pages/Home'
+
+import RutaProtegida from './components/RutaProtegida'
+import RutaPublica from './components/RutaPublica'
 
 function App() {
     return (
         <BrowserRouter>
             <Routes>
 
-                {/* Página de inicio: por ahora redirige al login */}
-                <Route path="/" element={<Navigate to="/login" replace />} />
+                {/* Rutas públicas: requieren no tener sesión */}
+                <Route element={<RutaPublica />}>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/registro" element={<Registro />} />
+                </Route>
 
-                {/* Registro de usuarios */}
-                <Route path="/registro" element={<Registro />} />
+                {/* Rutas privadas: requieren tener sesión */}
+                <Route element={<RutaProtegida />}>
+                    <Route path="/" element={<Home />} />
+                </Route>
 
-                {/* Inicio de sesión */}
-                <Route path="/login" element={<Login />} />
-
-                {/* Cualquier ruta desconocida vuelve al login */}
-                <Route path="*" element={<Navigate to="/login" replace />} />
+                {/* Rutas desconocidas */}
+                <Route path="*" element={<Navigate to="/" replace />} />
 
             </Routes>
         </BrowserRouter>

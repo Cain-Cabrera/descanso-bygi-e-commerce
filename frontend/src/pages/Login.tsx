@@ -2,12 +2,14 @@
 import { useState, type FormEvent } from 'react'
 import axios from 'axios'
 import { useNavigate, Link } from 'react-router-dom'
-
+import { useAuth } from '../contexts/AuthContext'
 import { iniciarSesion } from '../services/authService'
 import type { LoginRequest } from '../types/auth'
 
 function Login() {
     const navigate = useNavigate()
+
+    const { iniciarSesionContext } = useAuth()
 
     // Datos ingresados por el usuario.
     const [formulario, setFormulario] = useState<LoginRequest>({
@@ -44,17 +46,8 @@ function Login() {
 
             const respuesta = await iniciarSesion(datos)
 
-            // Por ahora guardamos el token como acordamos.
-            localStorage.setItem('token', respuesta.token)
-
-            // Guardamos los datos públicos del usuario.
-            localStorage.setItem('usuario', JSON.stringify({
-                id: respuesta.id,
-                nombre: respuesta.nombre,
-                apellido: respuesta.apellido,
-                mail: respuesta.mail,
-                rol: respuesta.rol,
-            }))
+            // Centralizamos el almacenamiento de la sesión.
+            iniciarSesionContext(respuesta)
 
             // Redirige al inicio después del login.
             navigate('/')
