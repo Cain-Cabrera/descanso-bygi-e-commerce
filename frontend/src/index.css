@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+/* Paleta de colores de Descanso by Gi */
+@theme {
+  --color-brand-950: #051F20;
+  --color-brand-900: #0B2B26;
+  --color-brand-800: #163832;
+  --color-brand-700: #235347;
+  --color-brand-300: #8EB69B;
+  --color-brand-100: #DAF1DE;
+}
