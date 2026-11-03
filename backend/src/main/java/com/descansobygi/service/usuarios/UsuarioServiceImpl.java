@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+import com.descansobygi.exception.EmailAlreadyExistsException;
 import java.util.List;
 
 @Service
@@ -123,7 +123,7 @@ public class UsuarioServiceImpl implements IUsuarioService{
      */
     private void validarEmailNoExista(String mail) {
         if (usuarioRepository.existsByMail(mail)) {
-            throw new IllegalArgumentException("El correo ya está registrado");
+            throw new EmailAlreadyExistsException("El correo ya está registrado");
         }
     }
 

@@ -14,6 +14,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -31,6 +35,9 @@ public class SecurityConfig {
         http
                 // CSRF no aplica: la API no usa cookies de sesión, usa tokens JWT.
                 .csrf(csrf -> csrf.disable())
+
+                // Habilita CORS para permitir solicitudes desde el frontend.
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
                 // Sin sesión en el servidor: cada request se autentica con su token.
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -70,6 +77,43 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable());
 
         return http.build();
+    }
+    // Define qué orígenes pueden comunicarse con el backend.
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // Dirección donde se ejecuta nuestro frontend React.
+        configuration.setAllowedOrigins(
+                List.of("http://localhost:5173")
+        );
+
+        // Métodos HTTP permitidos.
+        configuration.setAllowedMethods(
+                List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+        );
+
+        // Encabezados permitidos, incluido Authorization para JWT.
+        configuration.setAllowedHeaders(
+                List.of("Content-Type", "Authorization")
+        );
+
+        // Permite exponer encabezados de respuesta si los necesitamos.
+        configuration.setExposedHeaders(
+                List.of("Authorization")
+        );
+
+        // No utilizamos cookies de sesión; JWT se envía mediante Authorization.
+        configuration.setAllowCredentials(false);
+
+        // Aplica esta configuración a todos los endpoints.
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
 
     // Cifra las contraseñas con BCrypt (registro) y las compara (login).

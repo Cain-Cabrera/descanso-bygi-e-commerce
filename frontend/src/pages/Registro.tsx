@@ -2,6 +2,7 @@
 import { useState, type FormEvent } from 'react'
 import { registrarUsuario } from '../services/usuarioService'
 import type { UsuarioRequest } from '../types/usuario'
+import axios from 'axios'
 
 function Registro() {
     // Estado de los campos del formulario.
@@ -58,15 +59,39 @@ function Registro() {
                 celular: '',
             })
         } catch (err: unknown) {
-            // Mostramos un mensaje según el error recibido.
-            if (typeof err === 'object' && err !== null && 'response' in err) {
-                setError('No se pudo completar el registro. Verificá los datos o si el correo ya está registrado.')
+
+            // Comprobamos si el error viene de Axios.
+            if (axios.isAxiosError(err)) {
+
+                const status = err.response?.status
+                const detalles = err.response?.data?.detalles
+
+                // Correo duplicado.
+                if (status === 409) {
+                    setError('Este correo electrónico ya está registrado. Probá iniciar sesión.')
+
+                    // Datos inválidos.
+                } else if (status === 400) {
+                    setError(
+                        Array.isArray(detalles)
+                            ? detalles.join(', ')
+                            : 'Los datos ingresados no son válidos.'
+                    )
+
+                    // Otros errores del servidor.
+                } else {
+                    setError('Ocurrió un error al registrar la cuenta. Intentá nuevamente.')
+                }
+
             } else {
+                // Error de conexión.
                 setError('No se pudo conectar con el servidor. Intentá nuevamente.')
             }
+
         } finally {
             setCargando(false)
         }
+
     }
 
     return (
@@ -88,7 +113,11 @@ function Registro() {
                     </p>
                 </div>
 
-                <form onSubmit={manejarEnvio} className="space-y-4">
+                <form
+                    onSubmit={manejarEnvio}
+                    autoComplete="off"
+                    className="space-y-4"
+                >
 
                     <div>
                         <label htmlFor="nombre" className="mb-1 block text-sm font-medium text-brand-950">
