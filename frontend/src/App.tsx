@@ -1,9 +1,10 @@
-
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 import Registro from './pages/Registro'
 import Login from './pages/Login'
 import Home from './pages/Home'
+import Catalogo from './pages/Catalogo'
+import Carrito from './pages/Carrito'
 
 import RutaProtegida from './components/RutaProtegida'
 import RutaPublica from './components/RutaPublica'
@@ -22,6 +23,8 @@ function App() {
                 {/* Rutas privadas: requieren tener sesión */}
                 <Route element={<RutaProtegida />}>
                     <Route path="/" element={<Home />} />
+                    <Route path="/catalogo" element={<Catalogo />} />
+                    <Route path="/carrito" element={<Carrito />} />
                 </Route>
 
                 {/* Rutas desconocidas */}
