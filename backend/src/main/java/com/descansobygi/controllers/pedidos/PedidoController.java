@@ -2,6 +2,7 @@ package com.descansobygi.controllers.pedidos;
 
 import com.descansobygi.dto.pedido.PedidoRequestDTO;
 import com.descansobygi.dto.pedido.PedidoResponseDTO;
+import com.descansobygi.security.UsuarioActual;
 import com.descansobygi.service.pedidos.IPedidoService;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -23,43 +24,45 @@ public class PedidoController {
     @Autowired
     private IPedidoService pedidoService;
 
-    @PostMapping("/{usuarioId}")
+    // El usuario sale del token: cada uno crea pedidos solo con su propio carrito.
+    @PostMapping
     @Operation(summary = "Crear pedido", description = "Genera un pedido a partir del carrito activo del usuario")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Pedido creado"),
             @ApiResponse(responseCode = "400", description = "Carrito vacío o stock insuficiente"),
             @ApiResponse(responseCode = "404", description = "Usuario o carrito no encontrado")
     })
-    public ResponseEntity<PedidoResponseDTO> crearPedido(@PathVariable("usuarioId") Long usuarioId,
-                                                         @Valid @RequestBody PedidoRequestDTO dto) {
-        PedidoResponseDTO respuesta = pedidoService.crearPedido(usuarioId, dto);
+    public ResponseEntity<PedidoResponseDTO> crearPedido(@Valid @RequestBody PedidoRequestDTO dto) {
+        PedidoResponseDTO respuesta = pedidoService.crearPedido(UsuarioActual.id(), dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
     }
 
-    @GetMapping("/usuario/{usuarioId}")
-    @Operation(summary = "Pedidos por usuario", description = "Lista los pedidos de un usuario")
+    @GetMapping("/mis-pedidos")
+    @Operation(summary = "Mis pedidos", description = "Lista los pedidos del usuario logueado")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Pedidos encontrados"),
-            @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+            @ApiResponse(responseCode = "200", description = "Pedidos encontrados")
     })
-    public ResponseEntity<List<PedidoResponseDTO>> obtenerPedidosUsuario(@PathVariable("usuarioId") Long usuarioId) {
-        return ResponseEntity.ok(pedidoService.obtenerPedidosUsuario(usuarioId));
+    public ResponseEntity<List<PedidoResponseDTO>> misPedidos() {
+        return ResponseEntity.ok(pedidoService.obtenerPedidosUsuario(UsuarioActual.id()));
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Obtener pedido", description = "Obtiene un pedido por su ID")
+    @Operation(summary = "Obtener pedido", description = "Obtiene un pedido propio por su ID (el administrador puede ver cualquiera)")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Pedido encontrado"),
             @ApiResponse(responseCode = "404", description = "Pedido no encontrado")
     })
     public ResponseEntity<PedidoResponseDTO> obtenerPedido(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(pedidoService.obtenerPorId(id));
+        return ResponseEntity.ok(pedidoService.obtenerPorId(id, UsuarioActual.id(), UsuarioActual.esAdmin()));
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Cancelar pedido", description = "Cancela el pedido y devuelve el stock")
+    // Solo ADMINISTRADOR (ver SecurityConfig).
+    @Operation(summary = "Cancelar pedido", description = "Cancela el pedido y devuelve el stock (solo administrador)")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Pedido cancelado"),
+            @ApiResponse(responseCode = "400", description = "El pedido ya fue cancelado"),
+            @ApiResponse(responseCode = "403", description = "Sin permisos"),
             @ApiResponse(responseCode = "404", description = "Pedido no encontrado")
     })
     public ResponseEntity<Void> cancelarPedido(@PathVariable("id") Long id) {
@@ -67,7 +70,7 @@ public class PedidoController {
         return ResponseEntity.noContent().build();
     }
 
-    // Lista todos los pedidos registrados.
+    // Lista todos los pedidos registrados. Solo ADMINISTRADOR (ver SecurityConfig).
     @GetMapping
     @Operation(
             summary = "Listar todos los pedidos",
@@ -81,4 +84,4 @@ public class PedidoController {
         return ResponseEntity.ok(pedidoService.listarTodos());
     }
 
-}
+}

@@ -3,6 +3,8 @@ package com.descansobygi.service.pedidos;
 import com.descansobygi.dto.pedido.PedidoRequestDTO;
 import com.descansobygi.dto.pedido.PedidoResponseDTO;
 import com.descansobygi.enums.EstadoCarrito;
+import com.descansobygi.exception.BadRequestException;
+import com.descansobygi.exception.ResourceNotFoundException;
 import com.descansobygi.model.*;
 import com.descansobygi.repository.carrito.CarritoRepository;
 import com.descansobygi.repository.catalogo.ProductoRepository;
@@ -86,9 +88,15 @@ public class PedidoServiceImpl implements IPedidoService{
 
     @Transactional(readOnly = true)
     @Override
-    public PedidoResponseDTO obtenerPorId(Long id) {
+    public PedidoResponseDTO obtenerPorId(Long id, Long usuarioId, boolean esAdmin) {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
+
+        // Un usuario solo puede ver sus propios pedidos; el administrador ve todos.
+        // Respondemos "no encontrado" para no revelar que el pedido existe.
+        if (!esAdmin && !pedido.getUsuario().getId().equals(usuarioId)) {
+            throw new ResourceNotFoundException("Pedido no encontrado");
+        }
 
         return PedidoResponseDTO.fromEntidad(pedido);
     }
@@ -106,6 +114,12 @@ public class PedidoServiceImpl implements IPedidoService{
     public PedidoResponseDTO cancelarPedido(Long id) {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
+
+        // Un pedido ya cancelado no se puede volver a cancelar:
+        // si no, el stock se reintegraría dos veces (RN24, RN29).
+        if (pedido.isEliminado()) {
+            throw new BadRequestException("El pedido ya fue cancelado");
+        }
 
         // Devolver stock
         for (DetallePedido detalle : pedido.getDetalles()) {

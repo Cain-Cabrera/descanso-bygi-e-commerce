@@ -51,7 +51,23 @@ public class SecurityConfig {
                         // cualquier error se ve como 401.
                         .requestMatchers("/error").permitAll()
 
-                        // Todo lo demás requiere un token JWT válido.
+                        // Catálogo público: cualquiera puede ver productos, categorías y marcas (RF04-RF08).
+                        .requestMatchers(HttpMethod.GET, "/api/catalogo/**").permitAll()
+
+                        // Crear, modificar y eliminar en el catálogo: solo administradores (RN03, RN17, RN18, RN19).
+                        .requestMatchers("/api/catalogo/**").hasRole("ADMINISTRADOR")
+
+                        // Perfil propio: cualquier usuario logueado (el id sale del token).
+                        .requestMatchers("/api/usuarios/me").authenticated()
+
+                        // El resto de la gestión de usuarios: solo administradores (RF22).
+                        .requestMatchers("/api/usuarios/**").hasRole("ADMINISTRADOR")
+
+                        // Listar todos los pedidos y cancelarlos: solo administradores (RF21).
+                        .requestMatchers(HttpMethod.GET, "/api/pedidos").hasRole("ADMINISTRADOR")
+                        .requestMatchers(HttpMethod.DELETE, "/api/pedidos/*").hasRole("ADMINISTRADOR")
+
+                        // Todo lo demás (carrito y pedidos propios) requiere un token JWT válido.
                         .anyRequest().authenticated()
                 )
 

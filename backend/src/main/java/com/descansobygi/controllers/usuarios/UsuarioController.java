@@ -3,6 +3,7 @@ package com.descansobygi.controllers.usuarios;
 import com.descansobygi.dto.usuarios.UsuarioEditDTO;
 import com.descansobygi.dto.usuarios.UsuarioRequestDTO;
 import com.descansobygi.dto.usuarios.UsuarioResponseDTO;
+import com.descansobygi.security.UsuarioActual;
 import com.descansobygi.service.usuarios.IUsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -40,6 +41,31 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
     }
 
+
+    // --- Perfil propio: el id sale del token, no de la URL ---
+
+    @GetMapping("/me")
+    @Operation(summary = "Mi perfil", description = "Obtiene los datos del usuario logueado")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Perfil encontrado"),
+            @ApiResponse(responseCode = "401", description = "No autenticado")
+    })
+    public ResponseEntity<UsuarioResponseDTO> miPerfil() {
+        return ResponseEntity.ok(usuarioService.obtenerPorId(UsuarioActual.id()));
+    }
+
+    @PatchMapping("/me")
+    @Operation(summary = "Modificar mi perfil", description = "Actualiza los datos del usuario logueado (no permite cambiar el rol)")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Perfil actualizado"),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos o email ya registrado"),
+            @ApiResponse(responseCode = "401", description = "No autenticado")
+    })
+    public ResponseEntity<UsuarioResponseDTO> modificarMiPerfil(@Valid @RequestBody UsuarioEditDTO dto) {
+        return ResponseEntity.ok(usuarioService.modificar(UsuarioActual.id(), dto));
+    }
+
+    // --- Gestión de usuarios: solo ADMINISTRADOR (ver SecurityConfig) ---
 
     @GetMapping("/{id}")
     @Operation(summary = "Obtener usuario", description = "Obtiene un usuario por ID")

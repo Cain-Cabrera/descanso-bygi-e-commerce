@@ -268,7 +268,7 @@ psql -U postgres -d descanso_by_gi -f data.sql
 | `DB_URL` | URL de conexión a PostgreSQL | `jdbc:postgresql://<host>:<puerto>/<base_de_datos>` |
 | `DB_USERNAME` | Usuario de la base de datos | `<usuario>` |
 | `DB_PASSWORD` | Contraseña de la base de datos | `<contraseña>` |
-| `JWT_SECRET` | Clave para firmar los tokens JWT (mínimo 32 caracteres, distinta en cada entorno) | `<clave-secreta-larga>` |
+| `JWT_SECRET` | Clave para firmar los tokens JWT (mínimo 32 caracteres, distinta en cada entorno) | `<clave>` |
 
 
 ### 🖥️ Configuración local
@@ -279,7 +279,7 @@ En **Windows PowerShell**, ejecutá:
 $env:DB_URL=jdbc:postgresql://<host>:<puerto>/<base_de_datos>
 $env:DB_USERNAME=<usuario>
 $env:DB_PASSWORD=<contraseña>
-$env:JWT_SECRET=<clave-secreta-larga>
+$env:JWT_SECRET=<clave>
 
 ```
 ---
