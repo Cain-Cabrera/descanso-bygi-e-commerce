@@ -128,7 +128,7 @@ Los diagramas permiten visualizar la estructura de la base de datos y el diseño
 
 | Capa | Tecnología |
 |---|---|
-| Frontend | React + TypeScript |
+| Frontend | React + TypeScript + Tailwind CSS 4 |
 | Backend | Java + Spring Boot |
 | Base de datos | PostgreSQL |
 
