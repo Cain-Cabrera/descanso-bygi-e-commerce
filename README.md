@@ -138,21 +138,27 @@ Los diagramas permiten visualizar la estructura de la base de datos y el diseño
 
 ```
 descanso-by-gi/
-├── backend/                 # API REST en Spring Boot
+├── backend/
 │   ├── src/
+│   ├── sql/
+│   │   └── restricciones-integridad.sql
+│   ├── Dockerfile
 │   ├── build.gradle
-│   └── README.md
-├── frontend/                # Aplicación React + TypeScript
+│   ├── gradlew
+│   └── gradlew.bat
+├── docs/
+│   ├── Diagramas/
+│   ├── diccionario-datos.md
+│   ├── reglas-negocio.md
+│   └── requisitos.md
+├── frontend/
 │   ├── src/
+│   ├── public/
+│   ├── .env.example
 │   ├── package.json
 │   └── README.md
-├── docs/                    # Documentación técnica
-│   ├── Diagramas/
-│   │   ├── ER_PostgreSQL_Descanso_by_Gi.png   # Diagrama entidad-relación
-│   │   └── UML-Descanso-by.png                # Diagrama UML del sistema
-│   ├── diccionario-datos.md                   # Diccionario de datos
-│   ├── reglas-negocio.md                      # Reglas de negocio
-│   └── requisitos.md                          # Requisitos del sistema
+├── netlify.toml
+├── render.yaml
 └── README.md
 ```
 
@@ -181,21 +187,22 @@ backend/
 │   │   ├── java/com/descansobygi/
 │   │   │   ├── config/
 │   │   │   ├── controllers/
+│   │   │   ├── dto/
 │   │   │   ├── enums/
 │   │   │   ├── exception/
 │   │   │   ├── model/
 │   │   │   ├── repository/
+│   │   │   ├── security/
 │   │   │   └── service/
 │   │   └── resources/
 │   └── test/
-├── gradle/
+├── sql/
+│   └── restricciones-integridad.sql
+├── Dockerfile
 ├── build.gradle
 ├── gradlew
 ├── gradlew.bat
-├── settings.gradle
-├── .gitattributes
-├── .gitignore
-└── README.md
+└── settings.gradle
 
 ```
 
@@ -207,17 +214,18 @@ El frontend será desarrollado utilizando React + TypeScript.
 ```
 frontend/
 ├── src/
+│   ├── assets/
 │   ├── components/
+│   ├── contexts/
+│   ├── hooks/
 │   ├── pages/
 │   ├── services/
 │   ├── types/
-│   ├── hooks/
 │   ├── App.tsx
 │   ├── main.tsx
 │   └── index.css
 ├── public/
-├── .env
-├── .gitignore
+├── .env.example
 ├── package.json
 ├── tsconfig.json
 ├── vite.config.ts
