@@ -4,13 +4,16 @@ import com.descansobygi.model.Usuario;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
 
 public record UsuarioEditDTO(
 
+        @Pattern(regexp = ".*\\S.*", message = "El nombre no puede estar vacío")
         @Size(max = 100, message = "El nombre no puede superar los 100 caracteres")
         String nombre,
 
 
+        @Pattern(regexp = ".*\\S.*", message = "El apellido no puede estar vacío")
         @Size(max = 100, message = "El apellido no puede superar los 100 caracteres")
         String apellido,
 

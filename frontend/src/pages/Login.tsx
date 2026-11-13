@@ -2,7 +2,7 @@
 import { useState, type FormEvent } from 'react'
 import axios from 'axios'
 import { useNavigate, Link } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '../contexts/useAuth'
 import { iniciarSesion } from '../services/authService'
 import type { LoginRequest } from '../types/auth'
 

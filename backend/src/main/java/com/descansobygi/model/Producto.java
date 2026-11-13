@@ -2,6 +2,7 @@
 package com.descansobygi.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Check;
 
 import lombok.*;
 
@@ -9,13 +10,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 // Representa un producto del catálogo de Descanso by Gi.
+// Conserva igualdad por identidad de objeto para no depender de campos mutables.
 @Entity
 @Table(name = "productos")
+@Check(constraints = "precio >= 0 AND stock >= 0")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"id"},callSuper = false)
 public class Producto extends Base {
 
     // Nombre del producto; es obligatorio.
@@ -23,7 +25,7 @@ public class Producto extends Base {
     private String nombre;
 
     // Descripción opcional del producto.
-    @Column(length = 1000)
+    @Column(length = 500)
     private String descripcion;
 
     // Precio del producto con dos decimales.

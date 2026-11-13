@@ -3,6 +3,7 @@ package com.descansobygi.model;
 
 import com.descansobygi.enums.FormaDePago;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Check;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import java.util.Set;
 // Representa un pedido realizado por un usuario.
 @Entity
 @Table(name = "pedidos")
+@Check(constraints = "total >= 0")
 @Getter
 @Setter
 @NoArgsConstructor

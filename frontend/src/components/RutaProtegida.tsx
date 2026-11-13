@@ -1,6 +1,6 @@
 
 import { Navigate, Outlet } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '../contexts/useAuth'
 
 function RutaProtegida() {
     // Recuperamos el token desde el contexto global.

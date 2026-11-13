@@ -1,0 +1,13 @@
+[build]
+  base = "frontend"
+  command = "pnpm build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22.12.0"
+
+# Mantiene operativas las rutas de React Router al abrirlas directamente.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -226,12 +226,10 @@ frontend/
 
 ## 🚀 Cómo empezar
 
-> ⚠️ Proyecto en etapa inicial de desarrollo — las instrucciones se irán completando a medida que avancen los sprints.
-
 ### Requisitos previos
 
 - Java 21+
-- Node.js 18+
+- Node.js 22.12+
 - PostgreSQL
 
 ### Backend
@@ -241,23 +239,22 @@ cd backend
 ./gradlew bootRun
 ```
 
+Antes de iniciarlo, configurá las variables de PostgreSQL y `JWT_SECRET` indicadas abajo. En desarrollo, Hibernate crea o actualiza las tablas al iniciar el backend (`spring.jpa.hibernate.ddl-auto=update`).
+
 ### Frontend
 
 ```bash
 cd frontend
+cp .env.example .env
 pnpm install
 pnpm dev
 ```
 
+En Windows PowerShell, usá `Copy-Item .env.example .env` en lugar de `cp`.
+
 ### Base de datos
 
-```bash
-# Crear base de datos
-psql -U postgres -f schema.sql
-
-# Insertar datos iniciales
-psql -U postgres -d descanso_by_gi -f data.sql
-```
+Creá una base PostgreSQL vacía llamada `descanso_by_gi` (o usá el nombre que definas en `DB_URL`). El backend crea las tablas de las entidades al iniciarse. El repositorio no incluye archivos `schema.sql` ni `data.sql`; para agregar los `CHECK` del diccionario a una base que ya tenía las tablas, ejecutá una vez `backend/sql/restricciones-integridad.sql`.
 ## 🔐 Variables de entorno
 
 > ⚠️ **Importante:** El backend no arranca sin estas cuatro variables.  
@@ -269,6 +266,38 @@ psql -U postgres -d descanso_by_gi -f data.sql
 | `DB_USERNAME` | Usuario de la base de datos | `<usuario>` |
 | `DB_PASSWORD` | Contraseña de la base de datos | `<contraseña>` |
 | `JWT_SECRET` | Clave para firmar los tokens JWT (mínimo 32 caracteres, distinta en cada entorno) | `<clave>` |
+| `CORS_ALLOWED_ORIGINS` | Origen(es) del frontend permitidos, separados por coma; opcional en local | `http://localhost:5173` |
+
+El frontend usa `VITE_API_URL`, definido en `frontend/.env.example` para desarrollo local.
+
+### ☁️ Preparación para despliegue
+
+La configuración de despliegue está preparada en `render.yaml`, `backend/Dockerfile` y `netlify.toml`. El backend se ejecuta en Render con Java 21; el frontend se construye en Netlify con Node.js 22.12 y pnpm. La regla de redirección de Netlify permite que React Router abra directamente las rutas de la aplicación.
+
+El despliegue real queda pendiente de configurar las cuentas y credenciales del equipo:
+
+1. Crear la base PostgreSQL en Supabase y copiar los datos de conexión. En Render, completar `DB_URL` con una URL JDBC (`jdbc:postgresql://...`) y el modo SSL requerido por la conexión de Supabase; completar también `DB_USERNAME` y `DB_PASSWORD`. Si Supabase ya tenía las tablas antes de esta corrección, ejecutar `backend/sql/restricciones-integridad.sql` en su editor SQL.
+2. Crear el servicio web de Render desde el repositorio usando el Blueprint `render.yaml`. Configurar `JWT_SECRET` con una clave aleatoria de al menos 32 caracteres y `CORS_ALLOWED_ORIGINS` con el origen del sitio Netlify (sin rutas ni barra final).
+3. Importar el mismo repositorio en Netlify. La configuración toma `frontend/` como directorio base y `frontend/dist` como publicación. Definir `VITE_API_URL` como la URL HTTPS pública del backend de Render, sin agregar `/api`.
+4. Cuando ambos servicios estén publicados, verificar registro e inicio de sesión, catálogo, operaciones del carrito, creación de pedidos y acceso administrativo en el entorno desplegado.
+
+No guardes credenciales en estos archivos ni en el repositorio; ingresalas en las variables de entorno de cada servicio. Para desarrollo local, `frontend/.env.example` conserva la URL local.
+
+#### Crear el primer administrador
+
+El registro público crea usuarios con rol `USUARIO`; no permite elegir ni asignarse el rol administrador. Para habilitar el panel en un entorno nuevo:
+
+1. Registrá la cuenta que usará el administrador desde la página. Así la contraseña queda almacenada con el cifrado que usa la aplicación.
+2. Desde el editor SQL de Supabase, con una cuenta autorizada para administrar la base, promovela indicando el correo registrado:
+
+```sql
+UPDATE public.usuarios
+SET rol = 'ADMINISTRADOR'
+WHERE mail = 'correo-del-administrador@ejemplo.com'
+  AND eliminado = FALSE;
+```
+
+3. Confirmá que la operación afectó una fila. Cerrá sesión y volvé a ingresar para que el nuevo token incluya el rol actualizado.
 
 
 ### 🖥️ Configuración local
@@ -276,22 +305,24 @@ psql -U postgres -d descanso_by_gi -f data.sql
 En **Windows PowerShell**, ejecutá:
 
 ```powershell
-$env:DB_URL=jdbc:postgresql://<host>:<puerto>/<base_de_datos>
-$env:DB_USERNAME=<usuario>
-$env:DB_PASSWORD=<contraseña>
-$env:JWT_SECRET=<clave>
+$env:DB_URL="jdbc:postgresql://<host>:<puerto>/<base_de_datos>"
+$env:DB_USERNAME="<usuario>"
+$env:DB_PASSWORD="<contraseña>"
+$env:JWT_SECRET="<clave-de-al-menos-32-caracteres>"
+$env:CORS_ALLOWED_ORIGINS="http://localhost:5173"
 
 ```
 ---
 
 ## 🗺️ Roadmap
 
-- [ ] Análisis y diseño (requisitos, DB, arquitectura)
-- [ ] Setup inicial del proyecto (repos, dependencias)
-- [ ] Backend base + APIs de productos y categorías
-- [ ] Autenticación (login/registro) + carrito
-- [ ] Checkout + panel administrativo
-- [ ] Integración final, pruebas y documentación
+- [x] Análisis y diseño (requisitos, DB, arquitectura)
+- [x] Setup inicial del proyecto (repos, dependencias)
+- [x] Backend base + APIs de productos y categorías
+- [x] Autenticación (login/registro) + carrito
+- [x] Checkout + panel administrativo
+- [x] Integración, pruebas automatizadas y documentación
+- [ ] Pruebas manuales de los flujos en el navegador
 - [ ] Deployment en la nube
 - [ ] Video explicativo
 

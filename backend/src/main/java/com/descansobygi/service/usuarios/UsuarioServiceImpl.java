@@ -56,7 +56,7 @@ public class UsuarioServiceImpl implements IUsuarioService{
     @Override
     public UsuarioResponseDTO obtenerPorId(Long id) {
         // Buscar usuario
-        Usuario usuario = usuarioRepository.findById(id)
+        Usuario usuario = usuarioRepository.findByIdAndEliminadoFalse(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
         // Retornar DTO
         return UsuarioResponseDTO.fromEntidad(usuario);
@@ -75,7 +75,7 @@ public class UsuarioServiceImpl implements IUsuarioService{
     @Override
     public UsuarioResponseDTO modificar(Long id, UsuarioEditDTO dto) {
         // Buscar usuario
-        Usuario usuario = usuarioRepository.findById(id)
+        Usuario usuario = usuarioRepository.findByIdAndEliminadoFalse(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
         // Validar email solo si viene y cambió
@@ -105,7 +105,7 @@ public class UsuarioServiceImpl implements IUsuarioService{
     @Transactional
     @Override
     public UsuarioResponseDTO eliminarUsuario(Long id) {
-        Usuario usuario = usuarioRepository.findById(id)
+        Usuario usuario = usuarioRepository.findByIdAndEliminadoFalse(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
         // Marcar como eliminado (borrado lógico)

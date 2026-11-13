@@ -1,6 +1,6 @@
 import { Link, NavLink } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import { useCarrito } from '../contexts/CarritoContext'
+import { useAuth } from '../contexts/useAuth'
+import { useCarrito } from '../contexts/useCarrito'
 
 // Clases del botón de navegación; el activo se resalta.
 const claseNavegacion = ({ isActive }: { isActive: boolean }) =>
@@ -31,27 +31,36 @@ function Encabezado() {
                         Catálogo
                     </NavLink>
 
-                    <NavLink to="/carrito" className={claseNavegacion}>
+                    {usuario && <NavLink to="/carrito" className={claseNavegacion}>
                         Carrito
                         {cantidadTotal > 0 && (
                             <span className="ml-2 rounded-full bg-brand-300 px-2 py-0.5 text-xs font-bold text-brand-950">
                                 {cantidadTotal}
                             </span>
                         )}
-                    </NavLink>
+                    </NavLink>}
+                    {usuario && <NavLink to="/mis-pedidos" className={claseNavegacion}>Mis pedidos</NavLink>}
+                    {usuario && <NavLink to="/perfil" className={claseNavegacion}>Mi perfil</NavLink>}
+                    {usuario?.rol === 'ADMINISTRADOR' && <NavLink to="/admin" className={claseNavegacion}>Administración</NavLink>}
                 </nav>
 
                 <div className="flex items-center gap-5">
-                    <span className="hidden text-sm md:block">
-                        Hola, {usuario?.nombre}
-                    </span>
-
-                    <button
-                        onClick={cerrarSesion}
-                        className="rounded-lg bg-brand-700 px-4 py-2 text-sm font-semibold transition hover:bg-brand-800"
-                    >
-                        Cerrar sesión
-                    </button>
+                    {usuario ? (
+                        <>
+                            <span className="hidden text-sm md:block">Hola, {usuario.nombre}</span>
+                            <button
+                                onClick={cerrarSesion}
+                                className="rounded-lg bg-brand-700 px-4 py-2 text-sm font-semibold transition hover:bg-brand-800"
+                            >
+                                Cerrar sesión
+                            </button>
+                        </>
+                    ) : (
+                        <div className="flex gap-2">
+                            <Link to="/login" className="rounded-lg px-3 py-2 text-sm font-semibold hover:bg-brand-800">Ingresar</Link>
+                            <Link to="/registro" className="rounded-lg bg-brand-700 px-3 py-2 text-sm font-semibold hover:bg-brand-800">Registrarme</Link>
+                        </div>
+                    )}
                 </div>
 
             </div>

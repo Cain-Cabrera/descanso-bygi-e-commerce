@@ -1,18 +1,23 @@
 package com.descansobygi.dto.pedido;
 
 import com.descansobygi.enums.FormaDePago;
+import com.descansobygi.dto.detallePedido.DetallePedidoResponseDTO;
 import com.descansobygi.model.Pedido;
-import com.descansobygi.model.Usuario;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
-// devuelve los datos principales de un pedido
+// Devuelve el resumen y las líneas históricas del pedido, incluyendo el precio guardado al comprar.
 
 public record PedidoResponseDTO(
         Long id,
         BigDecimal total,
         FormaDePago formaDePago,
-        Long usuarioId
+        Long usuarioId,
+        LocalDateTime fechaAlta,
+        boolean cancelado,
+        List<DetallePedidoResponseDTO> detalles
 ) {
 
     public static PedidoResponseDTO fromEntidad(Pedido pedido) {
@@ -20,7 +25,13 @@ public record PedidoResponseDTO(
                 pedido.getId(),
                 pedido.getTotal(),
                 pedido.getFormaDePago(),
-                pedido.getUsuario().getId()
+                pedido.getUsuario().getId(),
+                pedido.getFechaAlta(),
+                pedido.isEliminado(),
+                pedido.getDetalles().stream()
+                        .filter(detalle -> !detalle.isEliminado())
+                        .map(DetallePedidoResponseDTO::fromEntidad)
+                        .toList()
         );
     }
 }

@@ -7,6 +7,7 @@ import com.descansobygi.exception.BadRequestException;
 import com.descansobygi.exception.ResourceNotFoundException;
 import com.descansobygi.model.Marca;
 import com.descansobygi.repository.catalogo.MarcaRepository;
+import com.descansobygi.repository.catalogo.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +18,14 @@ import java.util.stream.Collectors;
 public class MarcaServiceImpl implements IMarcaService {
     @Autowired
     private MarcaRepository marcaRepository;
+    @Autowired
+    private ProductoRepository productoRepository;
 
     @Transactional
     @Override
     public MarcaResponseDTO crear(MarcaRequestDTO dto) {
-        if (marcaRepository.existsByNombre(dto.nombre())) {
-            throw new RuntimeException("La marca ya existe");
+        if (marcaRepository.existsByNombreAndEliminadoFalse(dto.nombre())) {
+            throw new BadRequestException("La marca ya existe");
         }
 
         Marca marca = dto.toEntidad();
@@ -34,7 +37,8 @@ public class MarcaServiceImpl implements IMarcaService {
     @Override
     public MarcaResponseDTO obtenerPorId(Long id) {
         Marca marca = marcaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Marca no encontrada"));
+                .filter(m -> !m.isEliminado())
+                .orElseThrow(() -> new ResourceNotFoundException("Marca no encontrada"));
         return MarcaResponseDTO.fromEntidad(marca);
     }
 
@@ -54,7 +58,7 @@ public class MarcaServiceImpl implements IMarcaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Marca no encontrada"));
 
         if (dto.nombre() != null && !dto.nombre().equals(marca.getNombre())
-                && marcaRepository.existsByNombre(dto.nombre())) {
+                && marcaRepository.existsByNombreAndEliminadoFalse(dto.nombre())) {
             throw new BadRequestException("Ya existe una marca con ese nombre");
         }
 
@@ -69,10 +73,11 @@ public class MarcaServiceImpl implements IMarcaService {
     @Override
     public MarcaResponseDTO eliminar(Long id) {
         Marca marca = marcaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Marca no encontrada"));
+                .filter(m -> !m.isEliminado())
+                .orElseThrow(() -> new ResourceNotFoundException("Marca no encontrada"));
 
-        if (!marca.getProductos().isEmpty()) {
-            throw new RuntimeException("No se puede eliminar marca con productos");
+        if (productoRepository.countByMarcaIdAndEliminadoFalse(id) > 0) {
+            throw new BadRequestException("No se puede eliminar una marca con productos activos");
         }
 
         marca.setEliminado(true);

@@ -1,48 +1,61 @@
 
 import {
-    createContext,
-    useContext,
+    useEffect,
     useState,
     type ReactNode,
 } from 'react'
-
+import { AuthContext, type UsuarioSesion } from './authState'
 import type { LoginResponse } from '../types/auth'
-
-// Representa los datos públicos del usuario autenticado.
-interface UsuarioSesion {
-    id: number
-    nombre: string
-    apellido: string
-    mail: string
-    rol: string
-}
-
-// Define las operaciones y datos disponibles en el contexto.
-interface AuthContextType {
-    usuario: UsuarioSesion | null
-    token: string | null
-    iniciarSesionContext: (datos: LoginResponse) => void
-    cerrarSesion: () => void
-}
-
-// Creamos el contexto de autenticación.
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+import type { UsuarioResponse } from '../types/usuario'
 
 // Proveedor que administra el estado global de autenticación.
 export function AuthProvider({ children }: { children: ReactNode }) {
 
-    // Recuperamos la sesión almacenada al iniciar la aplicación.
-    const [token, setToken] = useState<string | null>(
-        () => localStorage.getItem('token')
-    )
+    // Recupera solo tokens con una sesión completa y dentro del tiempo informado por el backend.
+    const [token, setToken] = useState<string | null>(() => {
+        const tokenGuardado = localStorage.getItem('token')
+        const expira = Number(localStorage.getItem('tokenExpira'))
+        if (!tokenGuardado || !Number.isFinite(expira) || expira <= Date.now()) {
+            localStorage.removeItem('token')
+            localStorage.removeItem('tokenExpira')
+            return null
+        }
+        return tokenGuardado
+    })
 
     const [usuario, setUsuario] = useState<UsuarioSesion | null>(() => {
         const usuarioGuardado = localStorage.getItem('usuario')
-
-        return usuarioGuardado
-            ? JSON.parse(usuarioGuardado)
-            : null
+        try {
+            const usuarioParseado: unknown = usuarioGuardado ? JSON.parse(usuarioGuardado) : null
+            if (typeof usuarioParseado === 'object' && usuarioParseado !== null
+                && 'id' in usuarioParseado && 'nombre' in usuarioParseado && 'rol' in usuarioParseado
+                && typeof usuarioParseado.id === 'number'
+                && typeof usuarioParseado.nombre === 'string'
+                && typeof usuarioParseado.rol === 'string'
+                && localStorage.getItem('token')) {
+                return usuarioParseado as UsuarioSesion
+            }
+        } catch {
+            // Una sesión guardada corrupta no debe impedir que la aplicación arranque.
+        }
+        localStorage.removeItem('token')
+        localStorage.removeItem('tokenExpira')
+        localStorage.removeItem('usuario')
+        return null
     })
+
+    // Si una petición recibe 401, cerramos la sesión para evitar operar con un token vencido.
+    useEffect(() => {
+        const cerrarSesionVencida = () => {
+            localStorage.removeItem('token')
+            localStorage.removeItem('tokenExpira')
+            localStorage.removeItem('usuario')
+            setToken(null)
+            setUsuario(null)
+        }
+        window.addEventListener('sesion-expirada', cerrarSesionVencida)
+        return () => window.removeEventListener('sesion-expirada', cerrarSesionVencida)
+    }, [])
 
     // Guarda los datos recibidos después de iniciar sesión.
     const iniciarSesionContext = (datos: LoginResponse) => {
@@ -56,6 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         localStorage.setItem('token', datos.token)
+        localStorage.setItem('tokenExpira', String(Date.now() + datos.expiraEn * 1000))
         localStorage.setItem('usuario', JSON.stringify(usuarioDatos))
 
         setToken(datos.token)
@@ -65,10 +79,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Elimina la sesión actual.
     const cerrarSesion = () => {
         localStorage.removeItem('token')
+        localStorage.removeItem('tokenExpira')
         localStorage.removeItem('usuario')
 
         setToken(null)
         setUsuario(null)
+    }
+
+    const actualizarPerfil = (datos: UsuarioResponse) => {
+        setUsuario((actual) => {
+            if (!actual) return actual
+            const actualizado = { ...actual, ...datos }
+            localStorage.setItem('usuario', JSON.stringify(actualizado))
+            return actualizado
+        })
     }
 
     return (
@@ -78,20 +102,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 token,
                 iniciarSesionContext,
                 cerrarSesion,
+                actualizarPerfil,
             }}
         >
             {children}
         </AuthContext.Provider>
     )
-}
-
-// Hook para acceder fácilmente al contexto.
-export function useAuth() {
-    const contexto = useContext(AuthContext)
-
-    if (!contexto) {
-        throw new Error('useAuth debe utilizarse dentro de AuthProvider')
-    }
-
-    return contexto
 }

@@ -52,8 +52,9 @@ public class ProductoServiceImpl implements IProductoService{
     @Transactional(readOnly = true)
     @Override
     public ProductoResponseDTO obtenerPorId(Long id) {
-        Producto producto = productoRepository.findById(id).
-        orElseThrow(()-> new RuntimeException("Producto no encontrado"));
+        Producto producto = productoRepository.findById(id)
+                .filter(p -> !p.isEliminado())
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));
         return ProductoResponseDTO.fromEntidad(producto);
     }
 
@@ -101,6 +102,7 @@ public class ProductoServiceImpl implements IProductoService{
     @Override
     public ProductoResponseDTO modificar(Long id, ProductoEditDTO dto) {
         Producto producto = productoRepository.findById(id)
+                .filter(p -> !p.isEliminado())
                 .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));
 
         if (dto.nombre() != null)      producto.setNombre(dto.nombre());
@@ -115,7 +117,7 @@ public class ProductoServiceImpl implements IProductoService{
             producto.setCategoria(obtenerCategoriaOThrow(dto.categoriaId()));
         }
 
-        // Si llegó la lista de imágenes, reemplaza las anteriores
+        // Las imágenes son datos reemplazables: orphanRemoval las borra físicamente al quitarlas.
         if (dto.imagenes() != null) {
             producto.getImagenes().clear();
             for (String url : dto.imagenes()) {
@@ -133,8 +135,11 @@ public class ProductoServiceImpl implements IProductoService{
     @Override
     public ProductoResponseDTO eliminar(Long id) {
         Producto producto = productoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+                .filter(p -> !p.isEliminado())
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));
 
+        // Al dar de baja el producto, sus imágenes asociadas también se eliminan físicamente.
+        producto.getImagenes().clear();
         producto.setEliminado(true);
         Producto productoEliminado = productoRepository.save(producto);
 
@@ -146,10 +151,12 @@ public class ProductoServiceImpl implements IProductoService{
     */
     private Marca obtenerMarcaOThrow(Long marcaId) {
         return marcaRepository.findById(marcaId)
-                .orElseThrow(() -> new RuntimeException("Marca no encontrada"));
+                .filter(m -> !m.isEliminado())
+                .orElseThrow(() -> new ResourceNotFoundException("Marca no encontrada"));
     }
     private Categoria obtenerCategoriaOThrow(Long categoriaId) {
         return categoriaRepository.findById(categoriaId)
-                .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+                .filter(c -> !c.isEliminado())
+                .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrada"));
     }
 }

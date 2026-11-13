@@ -8,7 +8,7 @@ La base de datos esta compuesta por las tablas usuarios, categorias, marcas, pro
 
 Las tablas utilizan claves primarias para identificar de forma unica cada registro y claves foraneas para establecer las relaciones entre las entidades.
 
-Los registros utilizan eliminacion logica mediante el campo `eliminado`.
+Los registros utilizan eliminacion logica mediante el campo `eliminado`, excepto las imagenes, que se eliminan fisicamente cuando se reemplazan o cuando se da de baja su producto.
 
 ---
 
@@ -85,7 +85,7 @@ Relaciones:
 |---|---|---|---|
 | id | BIGINT | PK | Identificador unico de la imagen |
 | fecha_alta | TIMESTAMP | NOT NULL | Fecha y hora de creacion del registro |
-| eliminado | BOOLEAN | NOT NULL | Indica si el registro fue eliminado logicamente |
+| eliminado | BOOLEAN | NOT NULL | Campo heredado de `Base`; las imagenes se eliminan fisicamente y no utilizan eliminacion logica |
 | url | VARCHAR(500) | NOT NULL | URL donde se encuentra almacenada la imagen |
 | producto_id | BIGINT | FK, NOT NULL | Identificador del producto al que pertenece la imagen |
 
@@ -281,9 +281,11 @@ Se almacena para facilitar la consulta del importe total del pedido y conservar 
 
 ## 7. Eliminacion logica
 
-Las tablas utilizan el campo `eliminado` para implementar eliminacion logica.
+Las tablas utilizan el campo `eliminado` para implementar eliminacion logica, con la excepcion de `imagenes`.
 
-Cuando un registro deja de estar disponible, no se elimina fisicamente de la base de datos. En su lugar, el campo `eliminado` se establece en `TRUE`.
+Cuando un registro deja de estar disponible, no se elimina fisicamente de la base de datos. En su lugar, el campo `eliminado` se establece en `TRUE`. Esta regla aplica a todas las entidades excepto `Imagen`.
+
+Las filas de `imagenes` se eliminan fisicamente al reemplazar la lista de imagenes de un producto o al dar de baja el producto. El campo `eliminado` se conserva en la tabla porque `Imagen` hereda de `Base`, pero no se utiliza para eliminar imagenes.
 
 Esto permite conservar el historial de los registros y mantener la integridad de las relaciones existentes.
 

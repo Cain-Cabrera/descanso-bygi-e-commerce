@@ -8,9 +8,9 @@ import jakarta.validation.constraints.Size;
 
 public record MarcaRequestDTO(
 
-        // el nombre es obligatorio y admite hasta 20 caracteres
+        // Mantiene el mismo límite que la columna nombre de Marca.
         @NotBlank(message = "El nombre de la marca es obligatorio")
-        @Size(max = 20, message = "El nombre no puede superar los 20 caracteres")
+        @Size(max = 100, message = "El nombre no puede superar los 100 caracteres")
         String nombre
 ) {
 

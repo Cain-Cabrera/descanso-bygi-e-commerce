@@ -1,0 +1,7 @@
+.gradle
+.gradle-home
+build
+.env
+.idea
+.vscode
+*.iml

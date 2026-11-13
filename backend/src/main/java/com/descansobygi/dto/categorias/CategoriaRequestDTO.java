@@ -7,13 +7,13 @@ import jakarta.validation.constraints.Size;
 
 // va recibir los datos necesarios para crear o modificar una categoria
 public record CategoriaRequestDTO(
-        // el nombre es obligatorio y admite hasta 30 caracteres
+        // Mantiene el mismo límite que la entidad Categoria.
         @NotBlank(message = "El nombre de la categoria es oblogatorio")
-        @Size(max = 30, message = "No debe superar los 30 caracteres")
+        @Size(max = 100, message = "No debe superar los 100 caracteres")
         String nombre,
 
-        // la descripcion es opcional pero recomendada, admite hasta 100 caracteres
-        @Size(max = 100, message = "La descripcion no debe superar los 100 caracteres")
+        // Mantiene el mismo límite que la columna descripcion.
+        @Size(max = 255, message = "La descripcion no debe superar los 255 caracteres")
         String descripcion
 ) {
         public Categoria toEntidad() {

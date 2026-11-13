@@ -14,3 +14,15 @@ export const registrarUsuario = async (
 
     return respuesta.data
 }
+
+export type UsuarioPerfilEdit = Partial<Pick<UsuarioRequest, 'nombre' | 'apellido' | 'mail' | 'celular'>>
+
+export const obtenerMiPerfil = async (): Promise<UsuarioResponse> => {
+    const respuesta = await api.get<UsuarioResponse>('/api/usuarios/me')
+    return respuesta.data
+}
+
+export const actualizarMiPerfil = async (datos: UsuarioPerfilEdit): Promise<UsuarioResponse> => {
+    const respuesta = await api.patch<UsuarioResponse>('/api/usuarios/me', datos)
+    return respuesta.data
+}

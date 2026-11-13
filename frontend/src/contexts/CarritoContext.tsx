@@ -1,14 +1,11 @@
 import {
-    createContext,
     useCallback,
-    useContext,
     useEffect,
-    useMemo,
     useState,
     type ReactNode,
 } from 'react'
 
-import { useAuth } from './AuthContext'
+import { useAuth } from './useAuth'
 import {
     agregarAlCarrito,
     eliminarDelCarrito,
@@ -17,21 +14,7 @@ import {
     vaciarCarrito,
 } from '../services/carritoService'
 import type { Carrito, ItemCarritoRequest } from '../types/carrito'
-
-// Define los datos y acciones disponibles en el contexto.
-interface CarritoContextType {
-    carrito: Carrito | null
-    cargando: boolean
-    error: string
-    cantidadTotal: number
-    total: number
-    agregar: (item: ItemCarritoRequest) => Promise<boolean>
-    cambiarCantidad: (itemId: number, cantidad: number) => Promise<boolean>
-    quitar: (itemId: number) => Promise<boolean>
-    vaciar: () => Promise<boolean>
-}
-
-const CarritoContext = createContext<CarritoContextType | undefined>(undefined)
+import { CarritoContext } from './carritoState'
 
 // Proveedor que administra el estado global del carrito.
 export function CarritoProvider({ children }: { children: ReactNode }) {
@@ -49,10 +32,11 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
         }
 
         try {
-            setCarrito(await obtenerCarrito(usuario.id))
+            setCarrito(await obtenerCarrito())
         } catch (err) {
             console.error('Error al cargar el carrito:', err)
             setError('No se pudo cargar el carrito.')
+            throw err
         }
     }, [usuario])
 
@@ -60,8 +44,13 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         const cargarInicial = async () => {
             setCargando(true)
-            await recargar()
-            setCargando(false)
+            try {
+                await recargar()
+            } catch {
+                // recargar ya registra el error visible para la interfaz.
+            } finally {
+                setCargando(false)
+            }
         }
 
         cargarInicial()
@@ -72,6 +61,7 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
     const ejecutar = useCallback(
         async (accion: () => Promise<void>, mensajeError: string) => {
             setError('')
+            setCargando(true)
 
             try {
                 await accion()
@@ -81,6 +71,8 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
                 console.error(mensajeError, err)
                 setError(mensajeError)
                 return false
+            } finally {
+                setCargando(false)
             }
         },
         [recargar]
@@ -89,7 +81,7 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
     const agregar = (item: ItemCarritoRequest) =>
         usuario
             ? ejecutar(
-                  () => agregarAlCarrito(usuario.id, item),
+                  () => agregarAlCarrito(item),
                   'No se pudo agregar el producto. Revisá el stock disponible.'
               )
             : Promise.resolve(false)
@@ -97,7 +89,7 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
     const cambiarCantidad = (itemId: number, cantidad: number) =>
         usuario
             ? ejecutar(
-                  () => modificarCantidad(usuario.id, itemId, cantidad),
+                  () => modificarCantidad(itemId, cantidad),
                   'No se pudo cambiar la cantidad. Revisá el stock disponible.'
               )
             : Promise.resolve(false)
@@ -105,7 +97,7 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
     const quitar = (itemId: number) =>
         usuario
             ? ejecutar(
-                  () => eliminarDelCarrito(usuario.id, itemId),
+                  () => eliminarDelCarrito(itemId),
                   'No se pudo quitar el producto.'
               )
             : Promise.resolve(false)
@@ -113,23 +105,15 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
     const vaciar = () =>
         usuario
             ? ejecutar(
-                  () => vaciarCarrito(usuario.id),
+                  () => vaciarCarrito(),
                   'No se pudo vaciar el carrito.'
               )
             : Promise.resolve(false)
 
     // Valores derivados: contador del header y total a pagar.
     const items = carrito?.items ?? []
-
-    const cantidadTotal = useMemo(
-        () => items.reduce((suma, item) => suma + item.cantidad, 0),
-        [items]
-    )
-
-    const total = useMemo(
-        () => items.reduce((suma, item) => suma + item.subtotal, 0),
-        [items]
-    )
+    const cantidadTotal = items.reduce((suma, item) => suma + item.cantidad, 0)
+    const total = items.reduce((suma, item) => suma + item.subtotal, 0)
 
     return (
         <CarritoContext.Provider
@@ -139,6 +123,7 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
                 error,
                 cantidadTotal,
                 total,
+                recargar,
                 agregar,
                 cambiarCantidad,
                 quitar,
@@ -148,15 +133,4 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
             {children}
         </CarritoContext.Provider>
     )
-}
-
-// Hook para acceder fácilmente al contexto.
-export function useCarrito() {
-    const contexto = useContext(CarritoContext)
-
-    if (!contexto) {
-        throw new Error('useCarrito debe utilizarse dentro de CarritoProvider')
-    }
-
-    return contexto
 }

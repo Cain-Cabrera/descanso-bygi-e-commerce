@@ -88,7 +88,7 @@ Solo los usuarios con rol administrador podran modificar el stock de los product
 
 ### RN20 — Eliminacion de registros
 
-Los registros eliminados deberan conservarse mediante el mecanismo de eliminacion logica definido por el sistema.
+Los registros eliminados deberan conservarse mediante el mecanismo de eliminacion logica definido por el sistema, excepto las imagenes asociadas a productos, que se eliminaran fisicamente cuando se reemplacen o cuando se de de baja su producto.
 
 ### RN21 — Verificacion de stock
 

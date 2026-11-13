@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/catalogo/Marca")
+@RequestMapping("/api/catalogo/marca")
 @Tag(name = "categoria", description = "Gestión de las marcas")
 public class MarcaController {
     @Autowired
     IMarcaService marcaService;
 
 
-    @PostMapping("/crear")
+    @PostMapping({"", "/crear"})
     @Operation(summary = "Crear marca", description = "Agrega una nueva marca")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Marca creada"),
@@ -66,6 +66,13 @@ public class MarcaController {
                                                            @Valid @RequestBody MarcaEditDTO marcaEditDTO) {
         MarcaResponseDTO respuesta = marcaService.modificar(id, marcaEditDTO);
         return ResponseEntity.ok(respuesta);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar marca", description = "Marca una marca sin productos activos como eliminada")
+    public ResponseEntity<Void> eliminarMarca(@PathVariable Long id) {
+        marcaService.eliminar(id);
+        return ResponseEntity.noContent().build();
     }
 
 

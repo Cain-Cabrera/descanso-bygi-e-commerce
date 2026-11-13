@@ -7,6 +7,7 @@ import com.descansobygi.security.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,9 +25,13 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final String origenesPermitidos;
 
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
+    public SecurityConfig(
+            JwtTokenProvider jwtTokenProvider,
+            @Value("${app.cors.allowed-origins:http://localhost:5173}") String origenesPermitidos) {
         this.jwtTokenProvider = jwtTokenProvider;
+        this.origenesPermitidos = origenesPermitidos;
     }
 
     @Bean
@@ -101,9 +106,11 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // Dirección donde se ejecuta nuestro frontend React.
-        configuration.setAllowedOrigins(
-                List.of("http://localhost:5173")
-        );
+        // En producción se configura el origen del frontend; localmente se conserva Vite.
+        configuration.setAllowedOrigins(List.of(origenesPermitidos.split(",")).stream()
+                .map(String::trim)
+                .filter(origen -> !origen.isEmpty())
+                .toList());
 
         // Métodos HTTP permitidos.
         configuration.setAllowedMethods(

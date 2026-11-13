@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { useCarrito } from '../contexts/CarritoContext'
+import { Link } from 'react-router-dom'
+import { useCarrito } from '../contexts/useCarrito'
+import { useAuth } from '../contexts/useAuth'
 import type { Producto } from '../types/producto'
 
 interface ProductoCardProps {
@@ -11,11 +13,13 @@ const formatearPrecio = (valor: number) =>
     new Intl.NumberFormat('es-AR', {
         style: 'currency',
         currency: 'ARS',
-        maximumFractionDigits: 0,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
     }).format(valor)
 
 function ProductoCard({ producto }: ProductoCardProps) {
-    const { agregar } = useCarrito()
+    const { agregar, cargando: carritoCargando } = useCarrito()
+    const { usuario } = useAuth()
 
     const [agregando, setAgregando] = useState(false)
     const [mensaje, setMensaje] = useState('')
@@ -39,10 +43,20 @@ function ProductoCard({ producto }: ProductoCardProps) {
     return (
         <li className="flex flex-col rounded-xl bg-white p-5 shadow-md transition hover:shadow-xl">
 
-            {/* Espacio reservado para la imagen del producto */}
-            <div className="mb-4 flex h-40 items-center justify-center rounded-lg bg-brand-100 text-sm text-brand-700">
-                Sin imagen
-            </div>
+            <Link to={`/catalogo/${producto.id}`} aria-label={`Ver ${producto.nombre}`}>
+                {producto.imagenes?.[0] ? (
+                    <img
+                        src={producto.imagenes[0]}
+                        alt={producto.nombre}
+                        className="mb-4 h-40 w-full rounded-lg bg-brand-100 object-cover"
+                        loading="lazy"
+                    />
+                ) : (
+                    <div className="mb-4 flex h-40 items-center justify-center rounded-lg bg-brand-100 text-sm text-brand-700">
+                        Sin imagen
+                    </div>
+                )}
+            </Link>
 
             <div className="mb-2 flex flex-wrap gap-2">
                 <span className="rounded-full bg-brand-100 px-3 py-1 text-xs font-medium text-brand-800">
@@ -54,7 +68,9 @@ function ProductoCard({ producto }: ProductoCardProps) {
             </div>
 
             <h3 className="text-lg font-bold text-brand-950">
+                <Link to={`/catalogo/${producto.id}`} className="hover:underline">
                 {producto.nombre}
+                </Link>
             </h3>
 
             <p className="mt-1 line-clamp-2 text-sm text-brand-700">
@@ -69,14 +85,21 @@ function ProductoCard({ producto }: ProductoCardProps) {
                 {sinStock ? 'Sin stock' : `Stock disponible: ${producto.stock}`}
             </p>
 
-            <button
+            {usuario ? <button
                 type="button"
-                disabled={sinStock || agregando}
+                disabled={sinStock || agregando || carritoCargando}
                 onClick={manejarAgregar}
                 className="mt-4 w-full rounded-lg bg-brand-800 px-4 py-2 font-semibold text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
                 {agregando ? 'Agregando...' : 'Agregar al carrito'}
-            </button>
+            </button> : (
+                <Link
+                    to="/login"
+                    className="mt-4 w-full rounded-lg bg-brand-800 px-4 py-2 text-center font-semibold text-white transition hover:bg-brand-700"
+                >
+                    Iniciá sesión para comprar
+                </Link>
+            )}
 
             {mensaje && (
                 <p role="status" className="mt-2 text-center text-sm text-brand-800">

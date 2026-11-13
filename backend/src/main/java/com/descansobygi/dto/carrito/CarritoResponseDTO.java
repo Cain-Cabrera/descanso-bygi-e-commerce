@@ -19,6 +19,7 @@ public record CarritoResponseDTO(
                 carrito.getEstado(),
                 carrito.getUsuario().getId(),
                 carrito.getItems().stream()
+                        .filter(item -> !item.isEliminado())
                         .map(ItemCarritoResponseDTO::fromEntidad)
                         .toList()
         );

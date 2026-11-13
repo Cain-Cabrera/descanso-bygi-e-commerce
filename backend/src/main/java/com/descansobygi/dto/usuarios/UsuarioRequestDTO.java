@@ -25,7 +25,7 @@ public record UsuarioRequestDTO (
     @Size(max = 150, message = "El correo no puede superar los 150 caracteres")
     String mail,
 
-    // password se recibe, pero no se devuelve en el dto de respuesta
+    // La contraseña se cifra al registrar y nunca se incluye en la respuesta.
     @NotBlank(message = "La contrasena es obligatoria")
     @Size(min = 4, max = 10, message = "La contrasena debe tenre entre 4 y 10 caracteres")
     String contrasena,

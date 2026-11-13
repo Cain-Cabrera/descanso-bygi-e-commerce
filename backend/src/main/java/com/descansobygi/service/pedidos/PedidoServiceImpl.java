@@ -7,6 +7,7 @@ import com.descansobygi.exception.BadRequestException;
 import com.descansobygi.exception.ResourceNotFoundException;
 import com.descansobygi.model.*;
 import com.descansobygi.repository.carrito.CarritoRepository;
+import com.descansobygi.repository.carrito.ItemCarritoRepository;
 import com.descansobygi.repository.catalogo.ProductoRepository;
 import com.descansobygi.repository.pedidos.DetallePedidoRepository;
 import com.descansobygi.repository.pedidos.PedidoRepository;
@@ -16,8 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @Service
 public class PedidoServiceImpl implements IPedidoService{
@@ -34,28 +36,53 @@ public class PedidoServiceImpl implements IPedidoService{
     private CarritoRepository carritoRepository;
 
     @Autowired
+    private ItemCarritoRepository itemCarritoRepository;
+
+    @Autowired
     private ProductoRepository productoRepository;
 
     @Transactional
     @Override
     public PedidoResponseDTO crearPedido(Long usuarioId, PedidoRequestDTO dto) {
         // Buscar usuario
-        Usuario usuario = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Usuario usuario = usuarioRepository.findByIdAndEliminadoFalse(usuarioId)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
         // Obtener carrito activo
-        Carrito carrito = carritoRepository.findByUsuarioIdAndEstado(usuarioId, EstadoCarrito.ACTIVO)
-                .orElseThrow(() -> new RuntimeException("Carrito no encontrado"));
+        Carrito carrito = carritoRepository.findByUsuarioIdAndEstadoAndEliminadoFalse(usuarioId, EstadoCarrito.ACTIVO)
+                .orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado"));
 
-        // Validar que carrito tenga items
-        if (carrito.getItems().isEmpty()) {
-            throw new RuntimeException("El carrito está vacío");
+        List<ItemCarrito> items = carrito.getItems().stream()
+                .filter(item -> !item.isEliminado())
+                .sorted(java.util.Comparator.comparing(item -> item.getProducto().getId()))
+                .toList();
+        if (items.isEmpty()) {
+            throw new BadRequestException("El carrito está vacío");
         }
 
-        // Calcular total
+        // Bloquear productos durante la validación para que pedidos concurrentes
+        // no descuenten las mismas unidades disponibles.
+        Map<Long, Producto> productosBloqueados = new LinkedHashMap<>();
+        Map<Long, Integer> cantidadesSolicitadas = new LinkedHashMap<>();
+        for (ItemCarrito item : items) {
+            Long productoId = item.getProducto().getId();
+            Producto producto = productoRepository.findActivoPorIdParaActualizar(productoId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));
+            productosBloqueados.put(productoId, producto);
+            cantidadesSolicitadas.merge(productoId, item.getCantidad(), Integer::sum);
+        }
+        for (Map.Entry<Long, Integer> solicitud : cantidadesSolicitadas.entrySet()) {
+            Producto producto = productosBloqueados.get(solicitud.getKey());
+            if (producto.getStock() < solicitud.getValue()) {
+                throw new BadRequestException("Stock insuficiente para el producto " + producto.getNombre());
+            }
+        }
+
+        // El pedido conserva los precios vigentes al momento de confirmarlo.
         BigDecimal total = BigDecimal.ZERO;
-        for (ItemCarrito item : carrito.getItems()) {
-            total = total.add(item.getSubtotal());
+        for (ItemCarrito item : items) {
+            Producto producto = productosBloqueados.get(item.getProducto().getId());
+            total = total.add(producto.getPrecio().multiply(BigDecimal.valueOf(item.getCantidad())));
         }
 
         // Crear pedido
@@ -63,25 +90,24 @@ public class PedidoServiceImpl implements IPedidoService{
         Pedido pedidoGuardado = pedidoRepository.save(pedido);
 
         // Crear detalles y reducir stock
-        for (ItemCarrito item : carrito.getItems()) {
+        for (ItemCarrito item : items) {
+            Producto producto = productosBloqueados.get(item.getProducto().getId());
             DetallePedido detalle = new DetallePedido();
             detalle.setPedido(pedidoGuardado);
-            detalle.setProducto(item.getProducto());
+            detalle.setProducto(producto);
             detalle.setCantidad(item.getCantidad());
-            detalle.setPrecioUnitario(item.getProducto().getPrecio());
-            detalle.setSubtotal(item.getSubtotal());
+            detalle.setPrecioUnitario(producto.getPrecio());
+            detalle.setSubtotal(producto.getPrecio().multiply(BigDecimal.valueOf(item.getCantidad())));
 
             detallePedidoRepository.save(detalle);
+            pedidoGuardado.getDetalles().add(detalle);
 
-            // Reducir stock
-            Producto producto = item.getProducto();
             producto.setStock(producto.getStock() - item.getCantidad());
-            productoRepository.save(producto);
         }
 
-        // Vaciar carrito
-        carrito.getItems().clear();
-        carritoRepository.save(carrito);
+        // Mantener el historial de ítems, quitándolos del carrito activo.
+        items.forEach(item -> item.setEliminado(true));
+        itemCarritoRepository.saveAll(items);
 
         return PedidoResponseDTO.fromEntidad(pedidoGuardado);
     }
@@ -90,7 +116,7 @@ public class PedidoServiceImpl implements IPedidoService{
     @Override
     public PedidoResponseDTO obtenerPorId(Long id, Long usuarioId, boolean esAdmin) {
         Pedido pedido = pedidoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido no encontrado"));
 
         // Un usuario solo puede ver sus propios pedidos; el administrador ve todos.
         // Respondemos "no encontrado" para no revelar que el pedido existe.
@@ -104,16 +130,16 @@ public class PedidoServiceImpl implements IPedidoService{
     @Transactional(readOnly = true)
     @Override
     public List<PedidoResponseDTO> obtenerPedidosUsuario(Long usuarioId) {
-        return pedidoRepository.findByUsuarioIdAndEliminadoFalse(usuarioId).stream()
+        return pedidoRepository.findByUsuarioIdAndEliminadoFalseOrderByFechaAltaDesc(usuarioId).stream()
                 .map(PedidoResponseDTO::fromEntidad)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional
     @Override
     public PedidoResponseDTO cancelarPedido(Long id) {
         Pedido pedido = pedidoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido no encontrado"));
 
         // Un pedido ya cancelado no se puede volver a cancelar:
         // si no, el stock se reintegraría dos veces (RN24, RN29).
@@ -136,8 +162,9 @@ public class PedidoServiceImpl implements IPedidoService{
     @Transactional(readOnly = true)
     @Override
     public List<PedidoResponseDTO> listarTodos() {
-        return pedidoRepository.findAll().stream()
+        // La administración también puede consultar pedidos cancelados y distinguirlos por el indicador cancelado.
+        return pedidoRepository.findAllByOrderByFechaAltaDesc().stream()
                 .map(PedidoResponseDTO::fromEntidad)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

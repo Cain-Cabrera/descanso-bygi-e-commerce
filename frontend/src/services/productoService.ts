@@ -12,3 +12,8 @@ export const listarProductos = async (): Promise<Producto[]> => {
 
     return respuesta.data
 }
+
+export const obtenerProducto = async (id: number): Promise<Producto> => {
+    const respuesta = await api.get<Producto>(`/api/catalogo/producto/${id}`)
+    return respuesta.data
+}

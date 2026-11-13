@@ -1,13 +1,14 @@
 import { Link } from 'react-router-dom'
 import Encabezado from '../components/Encabezado'
-import { useCarrito } from '../contexts/CarritoContext'
+import { useCarrito } from '../contexts/useCarrito'
 
 // Formatea el precio en pesos argentinos.
 const formatearPrecio = (valor: number) =>
     new Intl.NumberFormat('es-AR', {
         style: 'currency',
         currency: 'ARS',
-        maximumFractionDigits: 0,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
     }).format(valor)
 
 function Carrito() {
@@ -72,7 +73,7 @@ function Carrito() {
                                         <button
                                             type="button"
                                             onClick={() => cambiarCantidad(item.id, item.cantidad - 1)}
-                                            disabled={item.cantidad <= 1}
+                                            disabled={cargando || item.cantidad <= 1}
                                             aria-label="Restar una unidad"
                                             className="h-9 w-9 rounded-lg bg-brand-100 font-bold text-brand-950 transition hover:bg-brand-300 disabled:cursor-not-allowed disabled:opacity-50"
                                         >
@@ -86,6 +87,7 @@ function Carrito() {
                                         <button
                                             type="button"
                                             onClick={() => cambiarCantidad(item.id, item.cantidad + 1)}
+                                            disabled={cargando}
                                             aria-label="Sumar una unidad"
                                             className="h-9 w-9 rounded-lg bg-brand-100 font-bold text-brand-950 transition hover:bg-brand-300"
                                         >
@@ -100,6 +102,7 @@ function Carrito() {
                                     <button
                                         type="button"
                                         onClick={() => quitar(item.id)}
+                                        disabled={cargando}
                                         className="text-sm font-semibold text-red-700 underline"
                                     >
                                         Quitar
@@ -117,20 +120,18 @@ function Carrito() {
                                 <button
                                     type="button"
                                     onClick={vaciar}
+                                    disabled={cargando}
                                     className="rounded-lg bg-brand-100 px-4 py-3 font-semibold text-brand-950 transition hover:bg-brand-300"
                                 >
                                     Vaciar carrito
                                 </button>
 
-                                {/* Deshabilitado hasta conectar el pedido con el backend */}
-                                <button
-                                    type="button"
-                                    disabled
-                                    title="Próximamente"
-                                    className="rounded-lg bg-brand-800 px-6 py-3 font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-60 sm:ml-auto"
+                                <Link
+                                    to="/checkout"
+                                    className="rounded-lg bg-brand-800 px-6 py-3 text-center font-semibold text-white transition hover:bg-brand-700 sm:ml-auto"
                                 >
                                     Pagar
-                                </button>
+                                </Link>
                             </div>
                         </div>
                     </>

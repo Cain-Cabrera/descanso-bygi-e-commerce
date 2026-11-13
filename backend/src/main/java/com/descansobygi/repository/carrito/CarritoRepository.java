@@ -8,5 +8,5 @@ import java.util.Optional;
 
 // Proporciona operaciones CRUD para los carritos.
 public interface CarritoRepository extends JpaRepository<Carrito, Long> {
-    Optional<Carrito> findByUsuarioIdAndEstado(Long usuarioId, EstadoCarrito estado);
+    Optional<Carrito> findByUsuarioIdAndEstadoAndEliminadoFalse(Long usuarioId, EstadoCarrito estado);
 }

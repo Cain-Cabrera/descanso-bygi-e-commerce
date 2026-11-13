@@ -2,8 +2,10 @@ package com.descansobygi.dto.categorias;
 
 import com.descansobygi.model.Categoria;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
 
 public record CategoriaEditDTO(
+        @Pattern(regexp = ".*\\S.*", message = "El nombre no puede estar vacío")
         @Size(max = 100, message = "El nombre no puede superar los 100 caracteres")
         String nombre,
 

@@ -9,6 +9,9 @@ import java.util.List;
 
 // Proporciona las operaciones CRUD basicas para los pedidos
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
-    List<Pedido> findByUsuarioIdAndEliminadoFalse(Long usuarioId);
+    List<Pedido> findByUsuarioIdAndEliminadoFalseOrderByFechaAltaDesc(Long usuarioId);
+    List<Pedido> findByEliminadoFalseOrderByFechaAltaDesc();
+    List<Pedido> findAllByOrderByFechaAltaDesc();
+    java.util.Optional<Pedido> findByIdAndEliminadoFalse(Long id);
 
 }

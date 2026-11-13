@@ -12,13 +12,13 @@ import java.util.List;
 
 public record ProductoRequestDTO(
 
-        // nombre obligatorio, hasta 100 caracteres
+        // El límite coincide con la columna nombre de la entidad Producto.
         @NotBlank(message = "El nombre es obligatorio")
-        @Size(max = 100, message = "El nombre no puede superar los 100 caracteres")
+        @Size(max = 150, message = "El nombre no puede superar los 150 caracteres")
         String nombre,
 
-        // descripción opcional, hasta 255 caracteres
-        @Size(max = 255, message = "La descripción no puede superar los 255 caracteres")
+        // La descripción tiene un máximo de 500 caracteres, como en el diccionario de datos.
+        @Size(max = 500, message = "La descripción no puede superar los 500 caracteres")
         String descripcion,
 
         // precio obligatorio y no puede ser negativo
@@ -38,9 +38,9 @@ public record ProductoRequestDTO(
         @NotNull(message = "La categoría es obligatoria")
         Long categoriaId,
 
-        // URLs de las imágenes, opcional
-        @Size(max = 10, message = "Un producto no puede tener más de 10 imágenes")
-        List<@NotBlank(message = "La URL de la imagen no puede estar vacía") String> imagenes
+        // Un producto puede tener cero o varias imágenes; cada URL respeta el diccionario de datos.
+        List<@NotBlank(message = "La URL de la imagen no puede estar vacía")
+                @Size(max = 500, message = "La URL de la imagen no puede superar los 500 caracteres") String> imagenes
 ) {
 
         public Producto toEntidad(Marca marca, Categoria categoria) {

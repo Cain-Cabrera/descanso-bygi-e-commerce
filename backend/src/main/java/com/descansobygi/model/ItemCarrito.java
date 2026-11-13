@@ -7,6 +7,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.Check;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +19,7 @@ import java.math.BigDecimal;
 // Representa un producto agregado al carrito de compras.
 @Entity
 @Table(name = "items_carrito")
+@Check(constraints = "cantidad > 0 AND subtotal >= 0")
 @Getter
 @Setter
 @NoArgsConstructor

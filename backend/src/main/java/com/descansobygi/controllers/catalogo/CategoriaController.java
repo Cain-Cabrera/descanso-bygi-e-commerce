@@ -25,7 +25,7 @@ public class CategoriaController {
     private ICategoriaService categoriaService;
 
     // Crear cattgoria
-    @PostMapping("/Registrar")
+    @PostMapping({"", "/registrar"})
     @Operation(summary = "Crear categoria", description = "Agregar una nueva categoria")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Categoria creada"),
@@ -65,5 +65,12 @@ public class CategoriaController {
     public ResponseEntity<CategoriaResponseDTO> modificarCategoria(@PathVariable Long id, @Valid @RequestBody CategoriaEditDTO categoriaEditDTO) {
         CategoriaResponseDTO respuesta = categoriaService.modificar(id, categoriaEditDTO);
         return ResponseEntity.ok(respuesta);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar categoría", description = "Marca una categoría sin productos activos como eliminada")
+    public ResponseEntity<Void> eliminarCategoria(@PathVariable Long id) {
+        categoriaService.eliminar(id);
+        return ResponseEntity.noContent().build();
     }
 }

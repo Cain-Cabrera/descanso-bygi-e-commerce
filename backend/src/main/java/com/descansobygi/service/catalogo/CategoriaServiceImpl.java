@@ -7,6 +7,7 @@ import com.descansobygi.exception.BadRequestException;
 import com.descansobygi.exception.ResourceNotFoundException;
 import com.descansobygi.model.Categoria;
 import com.descansobygi.repository.catalogo.CategoriaRepository;
+import com.descansobygi.repository.catalogo.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,14 +18,16 @@ import java.util.stream.Collectors;
 public class CategoriaServiceImpl implements ICategoriaService{
     @Autowired
     private CategoriaRepository categoriaRepository;
+    @Autowired
+    private ProductoRepository productoRepository;
 
     @Transactional
     @Override
     public CategoriaResponseDTO crear(CategoriaRequestDTO dto) {
 
         // Validar que no exista
-        if (categoriaRepository.existsByNombre(dto.nombre())) {
-            throw new RuntimeException("La categoría ya existe");
+        if (categoriaRepository.existsByNombreAndEliminadoFalse(dto.nombre())) {
+            throw new BadRequestException("La categoría ya existe");
         }
 
         Categoria categoria = dto.toEntidad();
@@ -36,7 +39,8 @@ public class CategoriaServiceImpl implements ICategoriaService{
     @Override
     public CategoriaResponseDTO obtenerPorId(Long id) {
         Categoria categoria = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+                .filter(c -> !c.isEliminado())
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada"));
         return CategoriaResponseDTO.fromEntidad(categoria);
     }
 
@@ -54,7 +58,7 @@ public class CategoriaServiceImpl implements ICategoriaService{
                 .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada"));
 
         if (dto.nombre() != null && !dto.nombre().equals(categoria.getNombre())
-                && categoriaRepository.existsByNombre(dto.nombre())) {
+                && categoriaRepository.existsByNombreAndEliminadoFalse(dto.nombre())) {
             throw new BadRequestException("Ya existe una categoría con ese nombre");
         }
 
@@ -66,10 +70,11 @@ public class CategoriaServiceImpl implements ICategoriaService{
     @Override
     public CategoriaResponseDTO eliminar(Long id) {
         Categoria categoria = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+                .filter(c -> !c.isEliminado())
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada"));
 
-        if (!categoria.getProductos().isEmpty()) {
-            throw new RuntimeException("No se puede eliminar categoría con productos");
+        if (productoRepository.countByCategoriaIdAndEliminadoFalse(id) > 0) {
+            throw new BadRequestException("No se puede eliminar una categoría con productos activos");
         }
 
         categoria.setEliminado(true);
