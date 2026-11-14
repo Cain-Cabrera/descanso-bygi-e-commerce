@@ -142,6 +142,8 @@ descanso-by-gi/
 │   ├── src/
 │   ├── sql/
 │   │   └── restricciones-integridad.sql
+│   ├── scripts/
+│   │   └── generar-dump.ps1
 │   ├── Dockerfile
 │   ├── build.gradle
 │   ├── gradlew
@@ -151,6 +153,8 @@ descanso-by-gi/
 │   ├── diccionario-datos.md
 │   ├── reglas-negocio.md
 │   └── requisitos.md
+├── database/
+│   └── README.md
 ├── frontend/
 │   ├── src/
 │   ├── public/
@@ -263,6 +267,8 @@ En Windows PowerShell, usá `Copy-Item .env.example .env` en lugar de `cp`.
 ### Base de datos
 
 Creá una base PostgreSQL vacía llamada `descanso_by_gi` (o usá el nombre que definas en `DB_URL`). El backend crea las tablas de las entidades al iniciarse. El repositorio no incluye archivos `schema.sql` ni `data.sql`; para agregar los `CHECK` del diccionario a una base que ya tenía las tablas, ejecutá una vez `backend/sql/restricciones-integridad.sql`.
+
+Para generar un dump PostgreSQL reproducible para la entrega, ejecutá `backend/scripts/generar-dump.ps1`. El script exporta el esquema y el catálogo, y deja vacías las tablas que podrían contener cuentas, datos personales o pedidos reales. Los pasos para generarlo y restaurarlo están en [`database/README.md`](./database/README.md).
 ## 🔐 Variables de entorno
 
 > ⚠️ **Importante:** El backend no arranca sin estas cuatro variables.  
